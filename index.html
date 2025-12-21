@@ -22,22 +22,28 @@ body{
   padding:20px;
   text-align:center;
 }
-#logo{
-  font-size:48px;
+.logo{
+  font-size:52px;
   font-weight:bold;
   color:var(--pink);
 }
-#girl{
-  width:260px;
+img{
+  width:240px;
   border-radius:25px;
-  margin:15px auto;
-  display:block;
+  margin:20px 0;
 }
 .card{
   background:#fff;
-  border-radius:20px;
-  padding:15px;
-  margin:15px 0;
+  padding:20px;
+  border-radius:25px;
+  margin-bottom:20px;
+}
+input{
+  width:100%;
+  padding:12px;
+  border-radius:25px;
+  border:1px solid #ccc;
+  margin:8px 0;
 }
 button{
   background:var(--pink);
@@ -47,17 +53,19 @@ button{
   border-radius:25px;
   width:100%;
   font-size:16px;
-  cursor:pointer;
 }
-input{
-  width:100%;
-  padding:12px;
+.social{
+  display:flex;
+  gap:10px;
+}
+.social a{
+  flex:1;
+  background:var(--pink);
+  color:#fff;
+  padding:10px;
   border-radius:20px;
-  border:1px solid #ccc;
-  margin:8px 0;
+  text-decoration:none;
 }
-
-/* CHAT */
 .chat-box{
   max-height:220px;
   overflow:auto;
@@ -65,9 +73,14 @@ input{
 }
 .msg{
   background:#ffb3cc;
-  padding:8px 12px;
+  padding:10px;
   border-radius:15px;
   margin:6px 0;
+  font-size:14px;
+}
+.small{
+  font-size:11px;
+  opacity:0.6;
 }
 .msg-row{
   display:flex;
@@ -76,25 +89,7 @@ input{
 .msg-row input{
   flex:1;
 }
-.typing{
-  font-size:12px;
-  opacity:0.6;
-}
-
-/* SOCIAL */
-.social{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-}
-.social a{
-  background:var(--pink);
-  color:#fff;
-  padding:10px 14px;
-  border-radius:20px;
-  text-decoration:none;
-  font-size:14px;
-}
+.hidden{display:none;}
 </style>
 </head>
 
@@ -102,120 +97,105 @@ input{
 
 <div class="container">
 
-<!-- LOGIN -->
-<div id="loginCard" class="card">
-  <div id="logo">SEEZU</div>
-  <img src="girl.jpg" id="girl">
-  <input id="loginName" placeholder="Enter your name">
-  <button onclick="login()">Login</button>
-</div>
+  <!-- LOGIN -->
+  <div id="loginBox" class="card">
+    <div class="logo">SEEZU</div>
+    <img src="girl.jpg">
+    <input id="loginName" placeholder="Enter your name">
+    <button onclick="login()">Login</button>
+  </div>
 
-<!-- MAIN -->
-<div id="main" style="display:none">
+  <!-- MAIN -->
+  <div id="mainBox" class="hidden">
 
-  <div id="logo">SEEZU</div>
-  <img src="girl.jpg" id="girl">
+    <div class="logo">SEEZU</div>
+    <img src="girl.jpg">
 
-  <!-- SOCIAL -->
-  <div class="card">
-    <div class="social">
-      <a href="https://instagram.com/fx_mausam.xo" target="_blank">Instagram</a>
-      <a href="#">Snapchat</a>
-      <a href="#">WhatsApp</a>
+    <!-- SOCIAL -->
+    <div class="card">
+      <div class="social">
+        <a href="#">Instagram</a>
+        <a href="#">Snapchat</a>
+        <a href="#">WhatsApp</a>
+      </div>
     </div>
-  </div>
 
-  <!-- MOOD -->
-  <div class="card">
-    <button onclick="toggleMood()">Mood Change</button>
-  </div>
-
-  <!-- MUSIC -->
-  <div class="card">
-    <h3>Music</h3>
-    <audio id="music" src="nepali_flute.mp3"></audio>
-    <button onclick="music.play()">▶ Play</button>
-    <button onclick="music.pause()">⏸ Pause</button>
-  </div>
-
-  <!-- CHAT -->
-  <div class="card">
-    <h3>Live Chat</h3>
-
-    <input id="username" placeholder="Sender name">
-
-    <div class="chat-box" id="chat"></div>
-    <div class="typing" id="typing"></div>
-
-    <div class="msg-row">
-      <input id="message" placeholder="Type message">
-      <button onclick="sendMessage()">Send</button>
+    <!-- MOOD -->
+    <div class="card">
+      <button onclick="toggleMood()">Mood Change</button>
     </div>
+
+    <!-- MUSIC -->
+    <div class="card">
+      <h3>Music</h3>
+      <audio id="music" src="nepali_flute.mp3"></audio>
+      <button onclick="music.play()">▶ Play</button>
+      <button onclick="music.pause()">⏸ Pause</button>
+    </div>
+
+    <!-- CHAT -->
+    <div class="card">
+      <h3>Live Chat</h3>
+
+      <div class="chat-box" id="chat"></div>
+      <div class="small" id="typing"></div>
+
+      <div class="msg-row">
+        <input id="message" placeholder="Type message">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <button onclick="logout()">Logout</button>
   </div>
 
-  <button onclick="logout()">Logout</button>
-
-</div>
 </div>
 
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT"
+  apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
+  authDomain: "seezu-1066d.firebaseapp.com",
+  databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
+  projectId: "seezu-1066d"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
 const chatRef = ref(db,"messages");
-const typingRef = ref(db,"typing");
 
 window.sendMessage = function(){
-  const user = username.value.trim();
-  const text = message.value.trim();
-  if(!user || !text) return;
-
+  const text = message.value;
+  if(!text) return;
   push(chatRef,{
-    user:user,
+    user: localStorage.user,
     text:text,
-    time:Date.now(),
-    seen:false
+    time: Date.now()
   });
-
   message.value="";
-  set(ref(db,"typing/"+user),false);
-}
+};
 
-message.oninput = ()=>{
-  if(username.value)
-    set(ref(db,"typing/"+username.value),true);
-}
-
-onChildAdded(chatRef,snap=>{
-  const d = snap.val();
+onChildAdded(chatRef, snap=>{
+  const m = snap.val();
   chat.innerHTML += `
     <div class="msg">
-      <b>${d.user}</b> : ${d.text}
-      <div style="font-size:11px;opacity:.6">Delivered</div>
-    </div>
-  `;
+      <b>${m.user}:</b> ${m.text}
+      <div class="small">Delivered</div>
+    </div>`;
   chat.scrollTop = chat.scrollHeight;
 });
 </script>
 
 <script>
 function login(){
-  if(!loginName.value) return;
-  localStorage.setItem("user",loginName.value);
-  loginCard.style.display="none";
-  main.style.display="block";
-  username.value=loginName.value;
+  const n = loginName.value.trim();
+  if(!n) return;
+  localStorage.user = n;
+  loginBox.classList.add("hidden");
+  mainBox.classList.remove("hidden");
 }
 function logout(){
   localStorage.clear();
@@ -223,13 +203,8 @@ function logout(){
 }
 function toggleMood(){
   document.body.style.background =
-    document.body.style.background=="rgb(255, 230, 239)"
-    ? "#dbeafe" : "#ffe6ef";
-}
-if(localStorage.getItem("user")){
-  loginCard.style.display="none";
-  main.style.display="block";
-  username.value=localStorage.getItem("user");
+    document.body.style.background === "rgb(255, 230, 239)"
+    ? "#e6f0ff" : "#ffe6ef";
 }
 </script>
 
