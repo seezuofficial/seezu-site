@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,219 +9,230 @@
 <style>
 :root{
  --pink:#ff5c8d;
- --light:#f6f0f7;
- --white:#ffffff;
+ --light:#eef3f9;
+ --card:#ffffff;
 }
-
 body{
  margin:0;
  font-family:Arial, sans-serif;
- background:linear-gradient(135deg,#fce7f0,#e9f1ff);
+ background:var(--light);
 }
-
 .container{
  max-width:420px;
  margin:auto;
  padding:20px;
  text-align:center;
 }
-
-#logo{
- font-size:52px;
+.hidden{display:none}
+.logo{
+ font-size:48px;
  font-weight:bold;
  color:var(--pink);
- margin:15px 0;
+ margin:20px 0;
 }
-
-#girl{
+.girl{
  width:240px;
- border-radius:28px;
- box-shadow:0 12px 30px rgba(0,0,0,.2);
- animation:float 3s ease-in-out infinite;
+ border-radius:25px;
+ box-shadow:0 10px 25px rgba(0,0,0,.2);
+ margin:15px auto;
+ display:block;
 }
-
-@keyframes float{
- 0%,100%{transform:translateY(0)}
- 50%{transform:translateY(-10px)}
+.card{
+ background:var(--card);
+ border-radius:25px;
+ padding:18px;
+ margin:15px 0;
+ box-shadow:0 5px 15px rgba(0,0,0,.1);
 }
-
-/* SOCIAL */
 .social{
  display:flex;
- justify-content:space-between;
  gap:10px;
- margin:18px 0;
+ justify-content:center;
 }
 .social a{
  flex:1;
  background:var(--pink);
  color:#fff;
- padding:10px;
- border-radius:30px;
+ padding:12px;
+ border-radius:25px;
  text-decoration:none;
  font-size:14px;
 }
-
-/* CARDS */
-.card{
- background:#fff;
- border-radius:22px;
- padding:16px;
- margin:14px 0;
- box-shadow:0 6px 18px rgba(0,0,0,.1);
-}
-
-/* MOOD */
-.moods span{
- font-size:26px;
- margin:6px;
- cursor:pointer;
-}
-
-/* MUSIC */
-.music-controls button{
+button{
+ padding:14px;
  border:none;
+ border-radius:25px;
  background:var(--pink);
  color:#fff;
- padding:10px 14px;
- border-radius:50%;
  font-size:16px;
- margin:0 5px;
+ cursor:pointer;
 }
-
-/* CHAT */
-.chat-box{
+input,select{
+ width:100%;
+ padding:12px;
+ border-radius:20px;
+ border:1px solid #ccc;
+ margin:8px 0;
+}
+.chat{
  max-height:220px;
  overflow:auto;
  text-align:left;
 }
 .msg{
- background:#ffb6cc;
+ background:#ffc1d6;
+ padding:10px;
+ border-radius:15px;
  margin:6px 0;
- padding:10px 14px;
- border-radius:18px;
  font-size:14px;
 }
+.typing{
+ font-size:12px;
+ opacity:.6;
+}
 
-/* INPUT + SEND SIDE */
-.chat-input{
+/* 🔥 MESSAGE INPUT ROW */
+.msg-row{
  display:flex;
  gap:8px;
- margin-top:10px;
+ align-items:center;
 }
-.chat-input input{
+.msg-row input{
  flex:1;
- padding:12px;
- border-radius:30px;
- border:1px solid #ccc;
+ margin:0;
 }
-.chat-input button{
- padding:12px 18px;
- border-radius:30px;
- border:none;
- background:var(--pink);
- color:#fff;
+.msg-row button{
+ width:80px;
+ padding:12px 0;
 }
 
-/* STATUS */
-.status{
- font-size:12px;
- opacity:.7;
- margin-top:4px;
-}
-
-footer{
- margin:20px 0;
- font-size:13px;
- opacity:.6;
+/* MUSIC */
+.music-controls button{
+ width:auto;
+ margin:5px;
+ padding:8px 14px;
 }
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<div id="logo">SEEZU</div>
-
-<img src="girl.jpg" id="girl">
-
-<div class="social">
- <a href="#">Instagram</a>
- <a href="#">Snapchat</a>
- <a href="#">WhatsApp</a>
-</div>
-
-<!-- MOOD -->
-<div class="card">
- <h3>Mood</h3>
- <button>Change Mood</button>
- <div class="moods">
-  <span>😊</span><span>😄</span><span>😍</span><span>😜</span>
+<!-- LOGIN PAGE -->
+<div class="container" id="loginPage">
+ <div class="logo">SEEZU</div>
+ <img src="login-girl.jpg" class="girl">
+ <div class="card">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()" style="width:100%">Login</button>
+  <button onclick="signup()" style="width:100%;margin-top:8px">Signup</button>
  </div>
 </div>
 
-<!-- MUSIC -->
-<div class="card">
- <h3>Music</h3>
- <div class="music-controls">
-  <button>⏮</button>
-  <button>▶</button>
-  <button>⏸</button>
- </div>
- <p style="font-size:13px;">Chill Lofi Beats</p>
-</div>
+<!-- MAIN PAGE -->
+<div class="container hidden" id="mainPage">
+ <div class="logo">SEEZU</div>
+ <img src="girl.jpg" class="girl">
 
-<!-- CHAT -->
-<div class="card">
- <h3>Live Chat</h3>
-
- <select style="width:100%;padding:10px;border-radius:20px">
-  <option>Public Chat</option>
-  <option>Private Chat</option>
- </select>
-
- <div class="chat-box" id="chat"></div>
-
- <div class="status" id="typing"> </div>
-
- <div class="chat-input">
-  <input id="msgInput" placeholder="Type message">
-  <button onclick="sendMsg()">Send</button>
+ <div class="social">
+  <a href="https://instagram.com/fx_mausam.xo" target="_blank">Instagram</a>
+  <a href="#">Snapchat</a>
+  <a href="https://wa.me/" target="_blank">WhatsApp</a>
  </div>
 
- <button style="margin-top:10px;width:100%">Logout</button>
+ <div class="card">
+  <h3>Mood</h3>
+  <button style="width:100%" onclick="toggleMood()">Change Mood</button>
+ </div>
+
+ <div class="card">
+  <h3>Music</h3>
+  <audio id="music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+  <div class="music-controls">
+   <button onclick="music.play()">▶</button>
+   <button onclick="music.pause()">⏸</button>
+  </div>
+ </div>
+
+ <div class="card">
+  <h3>Live Chat</h3>
+  <select id="room" onchange="loadChat()">
+   <option value="public">Public Chat</option>
+   <option value="private">Private Chat</option>
+  </select>
+
+  <div class="chat" id="chat"></div>
+  <div class="typing" id="typing"></div>
+
+  <!-- ✅ INPUT + SEND SIDE BY SIDE -->
+  <div class="msg-row">
+    <input id="msg" placeholder="Type message">
+    <button onclick="sendMsg()">Send</button>
+  </div>
+ </div>
+
+ <button style="width:100%" onclick="logout()">Logout</button>
 </div>
 
-<footer>© 2025 SEEZU</footer>
-
-</div>
-
-<!-- 🔥 FIREBASE (SAME – NOT REMOVED) -->
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-const firebaseConfig = {
- apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
- authDomain: "seezu-1066d.firebaseapp.com",
- databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
- projectId: "seezu-1066d"
+const firebaseConfig={
+ apiKey:"AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
+ authDomain:"seezu-1066d.firebaseapp.com",
+ databaseURL:"https://seezu-1066d-default-rtdb.firebaseio.com",
+ projectId:"seezu-1066d"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const chatRef = ref(db,"messages");
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
 
-window.sendMsg = ()=>{
- if(msgInput.value.trim()=="") return;
- push(chatRef,{ text: msgInput.value, seen:false });
- msgInput.value="";
-};
+window.login=()=>signInWithEmailAndPassword(auth,email.value,password.value);
+window.signup=()=>createUserWithEmailAndPassword(auth,email.value,password.value);
+window.logout=()=>signOut(auth);
 
-onChildAdded(chatRef,snap=>{
- const d=snap.val();
- chat.innerHTML+=`<div class="msg">${d.text}<div class="status">Delivered</div></div>`;
+onAuthStateChanged(auth,u=>{
+ if(u){
+  loginPage.classList.add("hidden");
+  mainPage.classList.remove("hidden");
+  loadChat();
+ }else{
+  loginPage.classList.remove("hidden");
+  mainPage.classList.add("hidden");
+ }
 });
+
+window.loadChat=()=>{
+ const chatRef=ref(db,"chat/"+room.value);
+ chat.innerHTML="";
+ onChildAdded(chatRef,s=>{
+  chat.innerHTML+=`<div class="msg">${s.val().text}<br><small>✓ Seen</small></div>`;
+ });
+};
+
+window.sendMsg=()=>{
+ if(!msg.value)return;
+ push(ref(db,"chat/"+room.value),{
+  text:msg.value,
+  uid:auth.currentUser.uid
+ });
+ msg.value="";
+};
+
+msg.addEventListener("input",()=>{
+ set(ref(db,"typing"),{user:"typing"});
+ typing.innerText="Typing...";
+ setTimeout(()=>typing.innerText="",1000);
+});
+
+window.toggleMood=()=>{
+ document.body.style.background =
+ document.body.style.background=="rgb(238, 243, 249)" ? "#ffe6ef" : "#eef3f9";
+};
 </script>
 
 </body>
