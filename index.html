@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SEEZU | Official Site</title>
+<title>SEEZU | Live Chat Site</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -33,23 +33,15 @@ body.dark{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:30px;
+  font-size:28px;
   z-index:999;
 }
 
-/* Dark button */
+/* Dark mode button */
 .dark-btn{
   position:fixed;
   top:10px;
   left:10px;
-  z-index:100;
-}
-
-/* Music button */
-.music-btn{
-  position:fixed;
-  top:10px;
-  right:10px;
   z-index:100;
 }
 
@@ -86,18 +78,6 @@ body.dark{
   50%{transform:translateY(-12px);}
 }
 
-/* Heart */
-.heart{
-  position:fixed;
-  font-size:24px;
-  animation:fly 1.2s linear forwards;
-}
-
-@keyframes fly{
-  from{opacity:1;transform:translateY(0);}
-  to{opacity:0;transform:translateY(-100px);}
-}
-
 /* Buttons */
 button{
   background:var(--pink);
@@ -107,15 +87,7 @@ button{
   border-radius:30px;
   cursor:pointer;
   font-size:16px;
-}
-
-/* Search */
-.search{
-  width:100%;
-  padding:14px;
-  border-radius:30px;
-  border:1px solid #ccc;
-  margin:20px 0;
+  margin-top:8px;
 }
 
 /* Cards */
@@ -131,19 +103,8 @@ body.dark .card{
   background:#1f1f1f;
 }
 
-/* Social */
-.social a{
-  display:block;
-  text-decoration:none;
-  background:var(--pink);
-  color:#fff;
-  padding:14px;
-  border-radius:30px;
-  margin:10px 0;
-}
-
-/* Form */
-input,textarea{
+/* Inputs */
+input, textarea{
   width:100%;
   padding:12px;
   border-radius:20px;
@@ -151,6 +112,18 @@ input,textarea{
   margin:10px 0;
 }
 
+/* Chat messages */
+#messages{
+  text-align:left;
+  max-height:220px;
+  overflow-y:auto;
+  margin-top:10px;
+}
+.msg{
+  margin-bottom:6px;
+}
+
+/* Footer */
 footer{
   font-size:14px;
   opacity:0.7;
@@ -160,88 +133,98 @@ footer{
 
 <body>
 
-<div id="loader">Welcome 💖</div>
+<div id="loader">Welcome to SEEZU 💖</div>
 
 <div class="dark-btn">
   <button onclick="toggleDark()">🌙 Mode</button>
 </div>
 
-<div class="music-btn">
-  <button onclick="toggleMusic()">🎵</button>
-</div>
-
-<audio id="bgm" loop>
-  <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kevin_MacLeod/Classical_Sampler/Kevin_MacLeod_-_Carefree.mp3">
-</audio>
-
 <div class="container">
 
   <div id="logo">SEEZU</div>
 
-  <img src="girl.jpg" id="girl" onclick="love()" alt="Anime Girl">
+  <img src="girl.jpg" id="girl" alt="Anime Girl">
 
-  <input class="search" placeholder="Search here...">
-
+  <!-- LIVE CHAT -->
   <div class="card">
-    <h2>🌸 Social Profiles</h2>
-    <div class="social">
-      <a href="https://instagram.com/fx_mausam.xo" target="_blank">Instagram</a>
-      <a>Snapchat: yumii2025102</a>
-      <a href="https://wa.me/" target="_blank">WhatsApp</a>
-    </div>
+    <h2>💬 Live Chat</h2>
+    <input id="username" placeholder="Your name">
+    <textarea id="message" placeholder="Type message..."></textarea>
+    <button onclick="sendMessage()">Send</button>
+
+    <div id="messages"></div>
   </div>
 
+  <!-- SOCIAL -->
   <div class="card">
-    <h2>💬 Chat (Demo)</h2>
-    <button onclick="alert('Chat demo 😊')">Open Chat</button>
+    <h2>🌸 Social</h2>
+    <p>Instagram: <b>@fx_mausam.xo</b></p>
+    <p>Snapchat: <b>yumii2025102</b></p>
   </div>
 
-  <div class="card">
-    <h2>📩 Contact Me</h2>
-    <input placeholder="Your Name">
-    <input placeholder="Your Email">
-    <textarea rows="3" placeholder="Message"></textarea>
-    <button onclick="alert('Message sent 💖')">Send</button>
-  </div>
-
-  <footer>© 2025 SEEZU • Made with 💗</footer>
+  <footer>© 2025 SEEZU • Built by Season 💗</footer>
 
 </div>
 
-<script>
-/* Loader */
-setTimeout(()=>loader.style.display="none",1200);
+<!-- FIREBASE + CHAT SCRIPT -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getDatabase, ref, push, onChildAdded }
+  from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-/* Dark mode remember */
-if(localStorage.getItem("dark")==="on"){
-  document.body.classList.add("dark");
-}
-function toggleDark(){
-  document.body.classList.toggle("dark");
-  localStorage.setItem("dark",
-    document.body.classList.contains("dark")?"on":"off");
-}
+  const firebaseConfig = {
+    apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
+    authDomain: "seezu-1066d.firebaseapp.com",
+    databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
+    projectId: "seezu-1066d",
+    storageBucket: "seezu-1066d.firebasestorage.app",
+    messagingSenderId: "783067066542",
+    appId: "1:783067066542:web:70c23adf7372b259a6fd3f"
+  };
 
-/* Hearts */
-function love(){
-  for(let i=0;i<5;i++){
-    let h=document.createElement("div");
-    h.className="heart";
-    h.innerHTML="❤️";
-    h.style.left=Math.random()*100+"%";
-    h.style.top="60%";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),1200);
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const chatRef = ref(db, "messages");
+
+  // SEND MESSAGE
+  window.sendMessage = function(){
+    const name = document.getElementById("username").value;
+    const msg  = document.getElementById("message").value;
+
+    if(name==="" || msg==="") return;
+
+    push(chatRef,{
+      user:name,
+      text:msg,
+      time:Date.now()
+    });
+
+    document.getElementById("message").value="";
   }
-}
 
-/* Music */
-let playing=false;
-function toggleMusic(){
-  let m=document.getElementById("bgm");
-  playing ? m.pause() : m.play();
-  playing=!playing;
-}
+  // RECEIVE MESSAGE
+  onChildAdded(chatRef,(snapshot)=>{
+    const data=snapshot.val();
+    const div=document.createElement("div");
+    div.className="msg";
+    div.innerHTML=`<b>${data.user}:</b> ${data.text}`;
+    document.getElementById("messages").appendChild(div);
+  });
+
+  // Loader
+  setTimeout(()=>loader.style.display="none",1200);
+
+  // Dark mode remember
+  if(localStorage.getItem("dark")==="on"){
+    document.body.classList.add("dark");
+  }
+  window.toggleDark=function(){
+    document.body.classList.toggle("dark");
+    localStorage.setItem(
+      "dark",
+      document.body.classList.contains("dark")?"on":"off"
+    );
+  }
 </script>
 
 </body>
