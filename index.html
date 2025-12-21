@@ -2,229 +2,151 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SEEZU | Live Chat Site</title>
+<title>SEEZU | Advanced Chat</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{
-  --pink:#ff5c8d;
-  --light:#ffe6ef;
-  --white:#ffffff;
-  --dark:#121212;
-}
-
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:var(--light);
-  transition:0.4s;
+  background:#ffe6ef;
 }
-
-body.dark{
-  background:var(--dark);
-  color:#fff;
-}
-
-/* Loader */
-#loader{
-  position:fixed;
-  inset:0;
-  background:var(--light);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:28px;
-  z-index:999;
-}
-
-/* Dark mode button */
-.dark-btn{
-  position:fixed;
-  top:10px;
-  left:10px;
-  z-index:100;
-}
-
-/* Layout */
 .container{
   max-width:420px;
   margin:auto;
   padding:20px;
-  text-align:center;
 }
-
-/* Logo */
 #logo{
-  font-size:60px;
+  text-align:center;
+  font-size:50px;
+  color:#ff5c8d;
   font-weight:bold;
-  color:var(--pink);
-  letter-spacing:5px;
-  margin-top:40px;
 }
-
-/* Girl image */
 #girl{
-  width:260px;
-  margin:20px auto;
+  width:240px;
   display:block;
-  border-radius:30px;
-  cursor:pointer;
-  animation:float 3s ease-in-out infinite;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  margin:20px auto;
+  border-radius:25px;
 }
-
-@keyframes float{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-12px);}
+.card{
+  background:#fff;
+  padding:15px;
+  border-radius:20px;
 }
-
-/* Buttons */
-button{
-  background:var(--pink);
-  color:#fff;
-  border:none;
-  padding:12px 22px;
-  border-radius:30px;
-  cursor:pointer;
-  font-size:16px;
+input,textarea{
+  width:100%;
+  padding:10px;
+  border-radius:15px;
+  border:1px solid #ccc;
   margin-top:8px;
 }
-
-/* Cards */
-.card{
-  background:var(--white);
-  border-radius:22px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
-
-body.dark .card{
-  background:#1f1f1f;
-}
-
-/* Inputs */
-input, textarea{
-  width:100%;
-  padding:12px;
-  border-radius:20px;
+button{
+  background:#ff5c8d;
+  color:#fff;
   border:none;
-  margin:10px 0;
-}
-
-/* Chat messages */
-#messages{
-  text-align:left;
-  max-height:220px;
-  overflow-y:auto;
-  margin-top:10px;
+  padding:10px 15px;
+  border-radius:20px;
+  margin-top:8px;
+  cursor:pointer;
 }
 .msg{
-  margin-bottom:6px;
+  background:#ffe6ef;
+  padding:8px;
+  border-radius:10px;
+  margin-top:6px;
 }
-
-/* Footer */
-footer{
-  font-size:14px;
-  opacity:0.7;
+.actions button{
+  font-size:12px;
+  padding:5px 10px;
+  margin-right:5px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="loader">Welcome to SEEZU 💖</div>
-
-<div class="dark-btn">
-  <button onclick="toggleDark()">🌙 Mode</button>
-</div>
-
 <div class="container">
-
   <div id="logo">SEEZU</div>
+  <img src="girl.jpg" id="girl">
 
-  <img src="girl.jpg" id="girl" alt="Anime Girl">
-
-  <!-- LIVE CHAT -->
   <div class="card">
-    <h2>💬 Live Chat</h2>
+    <h3>💬 Live Chat</h3>
     <input id="username" placeholder="Your name">
-    <textarea id="message" placeholder="Type message..."></textarea>
+    <textarea id="message" placeholder="Type message"></textarea>
     <button onclick="sendMessage()">Send</button>
 
     <div id="messages"></div>
   </div>
-
-  <!-- SOCIAL -->
-  <div class="card">
-    <h2>🌸 Social</h2>
-    <p>Instagram: <b>@fx_mausam.xo</b></p>
-    <p>Snapchat: <b>yumii2025102</b></p>
-  </div>
-
-  <footer>© 2025 SEEZU • Built by Season 💗</footer>
-
 </div>
 
-<!-- FIREBASE + CHAT SCRIPT -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-  import { getDatabase, ref, push, onChildAdded }
-  from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import {
+  getDatabase, ref, push,
+  onChildAdded, remove, update
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
-    authDomain: "seezu-1066d.firebaseapp.com",
-    databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
-    projectId: "seezu-1066d",
-    storageBucket: "seezu-1066d.firebasestorage.app",
-    messagingSenderId: "783067066542",
-    appId: "1:783067066542:web:70c23adf7372b259a6fd3f"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
+  authDomain: "seezu-1066d.firebaseapp.com",
+  databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
+  projectId: "seezu-1066d",
+  storageBucket: "seezu-1066d.firebasestorage.app",
+  messagingSenderId: "783067066542",
+  appId: "1:783067066542:web:70c23adf7372b259a6fd3f"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const chatRef = ref(db, "messages");
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const chatRef = ref(db,"messages");
 
-  // SEND MESSAGE
-  window.sendMessage = function(){
-    const name = document.getElementById("username").value;
-    const msg  = document.getElementById("message").value;
+window.sendMessage = function(){
+  const user = username.value;
+  const text = message.value;
+  if(!user || !text) return;
 
-    if(name==="" || msg==="") return;
-
-    push(chatRef,{
-      user:name,
-      text:msg,
-      time:Date.now()
-    });
-
-    document.getElementById("message").value="";
-  }
-
-  // RECEIVE MESSAGE
-  onChildAdded(chatRef,(snapshot)=>{
-    const data=snapshot.val();
-    const div=document.createElement("div");
-    div.className="msg";
-    div.innerHTML=`<b>${data.user}:</b> ${data.text}`;
-    document.getElementById("messages").appendChild(div);
+  push(chatRef,{
+    user,
+    text,
+    time:Date.now()
   });
+  message.value="";
+};
 
-  // Loader
-  setTimeout(()=>loader.style.display="none",1200);
+onChildAdded(chatRef,(snap)=>{
+  const data = snap.val();
+  const key = snap.key;
 
-  // Dark mode remember
-  if(localStorage.getItem("dark")==="on"){
-    document.body.classList.add("dark");
+  const div = document.createElement("div");
+  div.className="msg";
+  div.id=key;
+
+  div.innerHTML = `
+    <b>${data.user}:</b> 
+    <span class="text">${data.text}</span>
+    <div class="actions">
+      <button onclick="editMsg('${key}')">Edit</button>
+      <button onclick="deleteMsg('${key}')">Delete</button>
+    </div>
+  `;
+
+  messages.appendChild(div);
+});
+
+window.deleteMsg = function(key){
+  remove(ref(db,"messages/"+key));
+  document.getElementById(key).remove();
+};
+
+window.editMsg = function(key){
+  const newText = prompt("Edit message:");
+  if(newText){
+    update(ref(db,"messages/"+key),{
+      text:newText
+    });
+    document.querySelector(`#${key} .text`).innerText=newText;
   }
-  window.toggleDark=function(){
-    document.body.classList.toggle("dark");
-    localStorage.setItem(
-      "dark",
-      document.body.classList.contains("dark")?"on":"off"
-    );
-  }
+};
 </script>
 
 </body>
