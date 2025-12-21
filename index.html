@@ -2,63 +2,75 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SEEZU | Advanced Chat</title>
+<title>SEEZU | Login</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:#ffe6ef;
+  background:#ffe6f0;
 }
+
 .container{
   max-width:420px;
-  margin:auto;
-  padding:20px;
-}
-#logo{
-  text-align:center;
-  font-size:50px;
-  color:#ff5c8d;
-  font-weight:bold;
-}
-#girl{
-  width:240px;
-  display:block;
-  margin:20px auto;
-  border-radius:25px;
-}
-.card{
+  margin:40px auto;
   background:#fff;
-  padding:15px;
+  padding:25px;
   border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
 }
-input,textarea{
+
+h1{
+  text-align:center;
+  color:#ff4f8b;
+  margin-bottom:10px;
+}
+
+input{
   width:100%;
-  padding:10px;
-  border-radius:15px;
-  border:1px solid #ccc;
-  margin-top:8px;
+  padding:14px;
+  margin:10px 0;
+  border-radius:25px;
+  border:2px solid #ff4f8b;
+  outline:none;
+  font-size:15px;
 }
+
 button{
-  background:#ff5c8d;
-  color:#fff;
+  width:100%;
+  padding:14px;
   border:none;
-  padding:10px 15px;
-  border-radius:20px;
-  margin-top:8px;
+  border-radius:25px;
+  background:#ff4f8b;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+button:hover{
+  opacity:0.9;
+}
+
+.switch{
+  text-align:center;
+  margin-top:15px;
+  color:#555;
   cursor:pointer;
 }
-.msg{
-  background:#ffe6ef;
-  padding:8px;
-  border-radius:10px;
-  margin-top:6px;
+
+.hidden{
+  display:none;
 }
-.actions button{
-  font-size:12px;
-  padding:5px 10px;
-  margin-right:5px;
+
+.user-box{
+  text-align:center;
+}
+
+.logout{
+  background:#444;
+  margin-top:20px;
 }
 </style>
 </head>
@@ -66,30 +78,46 @@ button{
 <body>
 
 <div class="container">
-  <div id="logo">SEEZU</div>
-  <img src="girl.jpg" id="girl">
 
-  <div class="card">
-    <h3>💬 Live Chat</h3>
-    <input id="username" placeholder="Your name">
-    <textarea id="message" placeholder="Type message"></textarea>
-    <button onclick="sendMessage()">Send</button>
-
-    <div id="messages"></div>
+  <!-- LOGIN -->
+  <div id="loginBox">
+    <h1>SEEZU Login</h1>
+    <input id="loginEmail" type="email" placeholder="Email">
+    <input id="loginPassword" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <div class="switch" onclick="showSignup()">Create new account</div>
   </div>
+
+  <!-- SIGNUP -->
+  <div id="signupBox" class="hidden">
+    <h1>Create Account</h1>
+    <input id="signupName" placeholder="Username">
+    <input id="signupEmail" type="email" placeholder="Email">
+    <input id="signupPassword" type="password" placeholder="Password">
+    <button onclick="signup()">Sign Up</button>
+    <div class="switch" onclick="showLogin()">Already have account?</div>
+  </div>
+
+  <!-- USER DASHBOARD -->
+  <div id="userBox" class="hidden user-box">
+    <h1 id="welcome"></h1>
+    <p>You are logged in 🎉</p>
+
+    <button onclick="goChat()">Open Chat</button>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
+
 </div>
 
+<!-- 🔥 FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import {
-  getDatabase, ref, push,
-  onChildAdded, remove, update
-} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
   authDomain: "seezu-1066d.firebaseapp.com",
-  databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
   projectId: "seezu-1066d",
   storageBucket: "seezu-1066d.firebasestorage.app",
   messagingSenderId: "783067066542",
@@ -97,55 +125,69 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getDatabase(app);
-const chatRef = ref(db,"messages");
 
-window.sendMessage = function(){
-  const user = username.value;
-  const text = message.value;
-  if(!user || !text) return;
-
-  push(chatRef,{
-    user,
-    text,
-    time:Date.now()
-  });
-  message.value="";
+// UI helpers
+window.showSignup = () => {
+  loginBox.classList.add("hidden");
+  signupBox.classList.remove("hidden");
 };
 
-onChildAdded(chatRef,(snap)=>{
-  const data = snap.val();
-  const key = snap.key;
+window.showLogin = () => {
+  signupBox.classList.add("hidden");
+  loginBox.classList.remove("hidden");
+};
 
-  const div = document.createElement("div");
-  div.className="msg";
-  div.id=key;
+// SIGNUP
+window.signup = () => {
+  const name = signupName.value;
+  const email = signupEmail.value;
+  const pass = signupPassword.value;
 
-  div.innerHTML = `
-    <b>${data.user}:</b> 
-    <span class="text">${data.text}</span>
-    <div class="actions">
-      <button onclick="editMsg('${key}')">Edit</button>
-      <button onclick="deleteMsg('${key}')">Delete</button>
-    </div>
-  `;
+  if(!name || !email || !pass){
+    alert("Fill all fields");
+    return;
+  }
 
-  messages.appendChild(div);
+  createUserWithEmailAndPassword(auth, email, pass)
+  .then(res=>{
+    set(ref(db,"users/"+res.user.uid),{
+      name:name,
+      email:email
+    });
+  })
+  .catch(err=>alert(err.message));
+};
+
+// LOGIN
+window.login = () => {
+  signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value)
+  .catch(err=>alert(err.message));
+};
+
+// LOGOUT
+window.logout = () => signOut(auth);
+
+// CHECK LOGIN
+onAuthStateChanged(auth,user=>{
+  if(user){
+    get(ref(db,"users/"+user.uid)).then(snap=>{
+      welcome.innerText = "Welcome " + snap.val().name;
+    });
+
+    loginBox.classList.add("hidden");
+    signupBox.classList.add("hidden");
+    userBox.classList.remove("hidden");
+  }else{
+    userBox.classList.add("hidden");
+    loginBox.classList.remove("hidden");
+  }
 });
 
-window.deleteMsg = function(key){
-  remove(ref(db,"messages/"+key));
-  document.getElementById(key).remove();
-};
-
-window.editMsg = function(key){
-  const newText = prompt("Edit message:");
-  if(newText){
-    update(ref(db,"messages/"+key),{
-      text:newText
-    });
-    document.querySelector(`#${key} .text`).innerText=newText;
-  }
+// CHAT PAGE
+window.goChat = () => {
+  window.location.href="chat.html";
 };
 </script>
 
