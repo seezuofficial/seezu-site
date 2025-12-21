@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SEEZU | Login</title>
+<title>SEEZU | Live Chat</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -10,116 +10,115 @@ body{
   margin:0;
   font-family:Arial, sans-serif;
   background:#ffe6f0;
+  color:#333;
 }
-
+.dark{
+  background:#121212;
+  color:#fff;
+}
 .container{
-  max-width:420px;
-  margin:40px auto;
-  background:#fff;
-  padding:25px;
-  border-radius:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  max-width:500px;
+  margin:auto;
+  padding:20px;
 }
-
 h1{
   text-align:center;
-  color:#ff4f8b;
-  margin-bottom:10px;
+  color:#ff4d88;
+  font-size:48px;
 }
-
+.center{text-align:center;}
+img{
+  width:220px;
+  border-radius:20px;
+}
+button{
+  background:#ff4d88;
+  color:#fff;
+  border:none;
+  padding:12px 20px;
+  border-radius:25px;
+  cursor:pointer;
+}
 input{
   width:100%;
-  padding:14px;
-  margin:10px 0;
+  padding:12px;
+  margin:8px 0;
   border-radius:25px;
-  border:2px solid #ff4f8b;
-  outline:none;
-  font-size:15px;
+  border:1px solid #ff9dbb;
 }
-
-button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:25px;
-  background:#ff4f8b;
-  color:#fff;
-  font-size:16px;
-  cursor:pointer;
-  margin-top:10px;
-}
-
-button:hover{
-  opacity:0.9;
-}
-
-.switch{
-  text-align:center;
-  margin-top:15px;
-  color:#555;
-  cursor:pointer;
-}
-
-.hidden{
-  display:none;
-}
-
-.user-box{
-  text-align:center;
-}
-
-.logout{
-  background:#444;
+.card{
+  background:#fff;
+  padding:15px;
+  border-radius:20px;
   margin-top:20px;
 }
+.dark .card{background:#1e1e1e;}
+.chat-box{
+  max-height:300px;
+  overflow-y:auto;
+}
+.msg{
+  background:#ffb3cc;
+  padding:8px 12px;
+  border-radius:15px;
+  margin:6px 0;
+}
+.flex{
+  display:flex;
+  gap:10px;
+}
+.flex input{flex:1;}
+.hide{display:none;}
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
-  <!-- LOGIN -->
-  <div id="loginBox">
-    <h1>SEEZU Login</h1>
-    <input id="loginEmail" type="email" placeholder="Email">
-    <input id="loginPassword" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <div class="switch" onclick="showSignup()">Create new account</div>
-  </div>
+<h1>SEEZU</h1>
 
-  <!-- SIGNUP -->
-  <div id="signupBox" class="hidden">
-    <h1>Create Account</h1>
-    <input id="signupName" placeholder="Username">
-    <input id="signupEmail" type="email" placeholder="Email">
-    <input id="signupPassword" type="password" placeholder="Password">
-    <button onclick="signup()">Sign Up</button>
-    <div class="switch" onclick="showLogin()">Already have account?</div>
-  </div>
+<div class="center">
+<img src="3cdbce3-8550-4141-88dc-19a762c6dda6.jpg">
+<br><br>
+<button onclick="toggleDark()">🌙 Dark Mode</button>
+</div>
 
-  <!-- USER DASHBOARD -->
-  <div id="userBox" class="hidden user-box">
-    <h1 id="welcome"></h1>
-    <p>You are logged in 🎉</p>
+<!-- AUTH -->
+<div id="auth" class="card">
+<h3>Create / Login</h3>
+<input id="username" placeholder="Username (signup only)">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="signup()">Create Account</button>
+<br><br>
+<button onclick="login()">Login</button>
+</div>
 
-    <button onclick="goChat()">Open Chat</button>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
+<!-- CHAT -->
+<div id="chat" class="card hide">
+<h3>Live Chat</h3>
+<div id="messages" class="chat-box"></div>
+<div class="flex">
+<input id="message" placeholder="Type message">
+<button onclick="sendMsg()">Send</button>
+</div>
+<button onclick="logout()">Logout</button>
+</div>
 
 </div>
 
-<!-- 🔥 FIREBASE -->
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getDatabase, ref, push, set, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
   authDomain: "seezu-1066d.firebaseapp.com",
+  databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
   projectId: "seezu-1066d",
-  storageBucket: "seezu-1066d.firebasestorage.app",
+  storageBucket: "seezu-1066d.appspot.com",
   messagingSenderId: "783067066542",
   appId: "1:783067066542:web:70c23adf7372b259a6fd3f"
 };
@@ -128,67 +127,53 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// UI helpers
-window.showSignup = () => {
-  loginBox.classList.add("hidden");
-  signupBox.classList.remove("hidden");
+window.toggleDark = ()=>{
+ document.body.classList.toggle("dark");
 };
 
-window.showLogin = () => {
-  signupBox.classList.add("hidden");
-  loginBox.classList.remove("hidden");
+window.signup = ()=>{
+ let email=email.value;
+ let pass=password.value;
+ let user=username.value;
+ if(!user){alert("Username required");return;}
+
+ createUserWithEmailAndPassword(auth,email,pass)
+ .then(res=>{
+   set(ref(db,"users/"+res.user.uid),{username:user});
+   alert("Account Created");
+ });
 };
 
-// SIGNUP
-window.signup = () => {
-  const name = signupName.value;
-  const email = signupEmail.value;
-  const pass = signupPassword.value;
-
-  if(!name || !email || !pass){
-    alert("Fill all fields");
-    return;
-  }
-
-  createUserWithEmailAndPassword(auth, email, pass)
-  .then(res=>{
-    set(ref(db,"users/"+res.user.uid),{
-      name:name,
-      email:email
-    });
-  })
-  .catch(err=>alert(err.message));
+window.login = ()=>{
+ signInWithEmailAndPassword(auth,email.value,password.value)
+ .then(()=>{
+  authBox.style.display="none";
+  chat.style.display="block";
+ });
 };
 
-// LOGIN
-window.login = () => {
-  signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value)
-  .catch(err=>alert(err.message));
+window.logout = ()=>{
+ signOut(auth);
+ location.reload();
 };
 
-// LOGOUT
-window.logout = () => signOut(auth);
+window.sendMsg = ()=>{
+ let msg=message.value;
+ if(!msg)return;
+ push(ref(db,"messages"),{
+  text:msg,
+  uid:auth.currentUser.uid
+ });
+ message.value="";
+};
 
-// CHECK LOGIN
-onAuthStateChanged(auth,user=>{
-  if(user){
-    get(ref(db,"users/"+user.uid)).then(snap=>{
-      welcome.innerText = "Welcome " + snap.val().name;
-    });
-
-    loginBox.classList.add("hidden");
-    signupBox.classList.add("hidden");
-    userBox.classList.remove("hidden");
-  }else{
-    userBox.classList.add("hidden");
-    loginBox.classList.remove("hidden");
-  }
+onChildAdded(ref(db,"messages"),snap=>{
+ let d=snap.val();
+ let div=document.createElement("div");
+ div.className="msg";
+ div.innerText=d.text;
+ messages.appendChild(div);
 });
-
-// CHAT PAGE
-window.goChat = () => {
-  window.location.href="chat.html";
-};
 </script>
 
 </body>
