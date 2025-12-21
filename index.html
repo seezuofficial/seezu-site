@@ -7,260 +7,246 @@
 
 <style>
 :root{
- --pink:#ff5c8d;
- --light:#ffe6ef;
- --white:#fff;
+  --pink:#ff5c8d;
+  --light:#f3f6fb;
+  --card:#ffffff;
 }
+*{box-sizing:border-box}
 body{
- margin:0;
- font-family:Arial;
- background:var(--light);
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:var(--light);
 }
 .hidden{display:none}
 
-/* layout */
-.container{
- max-width:420px;
- margin:auto;
- padding:20px;
- text-align:center;
+/* ---------- LOGIN ---------- */
+#loginPage{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.login-box{
+  background:#fff;
+  padding:25px;
+  border-radius:25px;
+  width:90%;
+  max-width:380px;
+  text-align:center;
+  box-shadow:0 15px 40px rgba(0,0,0,.15);
+}
+.login-box img{
+  width:200px;
+  border-radius:25px;
+  animation:float 3s ease-in-out infinite;
+}
+.login-box input{
+  width:100%;
+  padding:14px;
+  border-radius:20px;
+  border:1px solid #ccc;
+  margin:10px 0;
+}
+.login-box button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:25px;
+  background:var(--pink);
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+
+/* ---------- HOME ---------- */
+#homePage{
+  max-width:420px;
+  margin:auto;
+  padding:15px;
 }
 #logo{
- font-size:55px;
- color:var(--pink);
- font-weight:bold;
+  text-align:center;
+  font-size:48px;
+  font-weight:bold;
+  color:var(--pink);
 }
-
-/* girl */
 #girl{
- width:240px;
- border-radius:30px;
- animation:float 3s ease-in-out infinite;
- box-shadow:0 10px 20px rgba(0,0,0,.2);
-}
-@keyframes float{
- 0%,100%{transform:translateY(0)}
- 50%{transform:translateY(-10px)}
+  display:block;
+  margin:15px auto;
+  width:230px;
+  border-radius:30px;
+  animation:float 3s ease-in-out infinite;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
 }
 
-/* card */
+/* Social */
+.social{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+}
+.social a{
+  flex:1;
+  text-align:center;
+  padding:12px;
+  background:var(--pink);
+  color:#fff;
+  text-decoration:none;
+  border-radius:20px;
+  font-size:14px;
+}
+
+/* Cards */
 .card{
- background:#fff;
- border-radius:22px;
- padding:18px;
- margin:20px 0;
-}
-input,select{
- width:100%;
- padding:12px;
- border-radius:25px;
- border:1px solid #ccc;
- margin:6px 0;
-}
-button{
- width:100%;
- padding:12px;
- background:var(--pink);
- color:#fff;
- border:none;
- border-radius:30px;
- margin:6px 0;
- font-size:16px;
+  background:var(--card);
+  margin:15px 0;
+  padding:15px;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
 }
 
-/* chat */
+/* Mood + Music */
+.flex{
+  display:flex;
+  gap:15px;
+}
+.mood-btn{
+  flex:1;
+  background:var(--pink);
+  color:#fff;
+  border:none;
+  border-radius:20px;
+  padding:20px;
+  font-size:16px;
+}
+.music{
+  flex:1;
+  text-align:center;
+}
+.music button{
+  border:none;
+  background:#eee;
+  padding:10px 14px;
+  border-radius:50%;
+  margin:5px;
+}
+
+/* Chat */
 .chat-box{
- max-height:260px;
- overflow:auto;
- text-align:left;
+  max-height:200px;
+  overflow:auto;
 }
 .msg{
- background:#ffb3cc;
- padding:10px;
- border-radius:15px;
- margin:6px 0;
+  background:#ffd1e1;
+  padding:10px;
+  border-radius:15px;
+  margin:8px 0;
+  font-size:14px;
 }
-.small{
- font-size:11px;
- opacity:.7;
+input, select{
+  width:100%;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid #ccc;
+  margin-top:10px;
 }
-.typing{
- font-size:13px;
- color:#999;
+.send-btn, .logout{
+  width:100%;
+  margin-top:10px;
+  padding:14px;
+  border:none;
+  border-radius:25px;
+  background:var(--pink);
+  color:#fff;
+  font-size:16px;
 }
 
-/* sidebar */
-.social-side{
- position:fixed;
- top:35%;
- left:10px;
-}
-.social-side a{
- display:block;
- background:var(--pink);
- color:#fff;
- padding:10px 14px;
- border-radius:30px;
- margin:6px 0;
- text-decoration:none;
- font-size:14px;
+/* Anim */
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
 }
 </style>
 </head>
 
 <body>
 
-<div class="social-side hidden" id="socialSide">
- <a href="https://instagram.com/fx_mausam.xo" target="_blank">Instagram</a>
- <a href="#">Snapchat</a>
- <a href="#">WhatsApp</a>
-</div>
-
-<div class="container">
-
 <!-- LOGIN -->
-<div id="loginPage" class="card">
- <h3>Login / Signup</h3>
- <input id="username" placeholder="Username">
- <input id="email" placeholder="Email">
- <input id="pass" type="password" placeholder="Password">
- <button onclick="login()">Enter</button>
+<div id="loginPage">
+  <div class="login-box">
+    <img src="login-girl.jpg">
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Login / Signup</button>
+  </div>
 </div>
 
-<!-- MAIN -->
-<div id="mainPage" class="hidden">
+<!-- HOME -->
+<div id="homePage" class="hidden">
 
- <div id="logo">SEEZU</div>
- <img src="girl.jpg" id="girl">
+  <div id="logo">SEEZU</div>
+  <img src="girl.jpg" id="girl">
 
- <!-- MOOD -->
- <div class="card">
-  <h3>Mood / Music</h3>
-  <select id="mood" onchange="changeMood()">
-   <option>Happy</option>
-   <option>Sad</option>
-   <option>Chill</option>
-  </select>
-  <audio id="music" controls>
-   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
-  </audio>
- </div>
+  <div class="social">
+    <a href="https://instagram.com/fx_mausam.xo">Instagram</a>
+    <a href="#">Snapchat</a>
+    <a href="https://wa.me/">WhatsApp</a>
+  </div>
 
- <!-- CHAT -->
- <div class="card">
-  <h3>Live Chat</h3>
-  <select id="chatType">
-   <option value="public">Public Chat</option>
-   <option value="private">Private Chat</option>
-  </select>
+  <div class="flex">
+    <button class="mood-btn" onclick="changeMood()">Mood</button>
+    <div class="card music">
+      <div>Music</div>
+      <button>⏮</button>
+      <button onclick="toggleMusic()">⏯</button>
+      <button>⏭</button>
+      <audio id="song" src="music.mp3"></audio>
+    </div>
+  </div>
 
-  <div class="chat-box" id="chat"></div>
-  <div class="typing" id="typing"></div>
-
-  <input id="msgInput" placeholder="Type message"
-   oninput="typingStatus(true)"
-   onblur="typingStatus(false)">
-  <button onclick="sendMsg()">Send</button>
-  <button onclick="logout()">Logout</button>
- </div>
+  <div class="card">
+    <h3 style="text-align:center">Live Chat</h3>
+    <select>
+      <option>Public Chat</option>
+      <option>Private Chat</option>
+    </select>
+    <div class="chat-box" id="chat"></div>
+    <input id="msg" placeholder="Type message">
+    <button class="send-btn" onclick="send()">Send</button>
+    <button class="logout" onclick="logout()">Logout</button>
+  </div>
 
 </div>
-</div>
 
-<!-- FIREBASE -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-import { getDatabase,ref,push,onChildAdded,remove,update,set,onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
-
-const firebaseConfig={
- apiKey:"AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
- authDomain:"seezu-1066d.firebaseapp.com",
- databaseURL:"https://seezu-1066d-default-rtdb.firebaseio.com",
- projectId:"seezu-1066d"
-};
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getDatabase(app);
-
-let currentUser="";
-let chatRef=ref(db,"public");
-
-window.login=()=>{
- currentUser=username.value;
- signInWithEmailAndPassword(auth,email.value,pass.value)
- .catch(()=>createUserWithEmailAndPassword(auth,email.value,pass.value));
-};
-
-onAuthStateChanged(auth,u=>{
- if(u){
-  loginPage.classList.add("hidden");
-  mainPage.classList.remove("hidden");
-  socialSide.classList.remove("hidden");
- }
-});
-
-window.logout=()=>signOut(auth).then(()=>location.reload());
-
-chatType.onchange=()=>{
- chat.innerHTML="";
- chatRef=ref(db,chatType.value);
- loadChat();
-};
-
-function loadChat(){
- onChildAdded(chatRef,s=>{
-  const d=s.val();
-  chat.innerHTML+=`
-   <div class="msg">
-    <b>${d.user}</b>: ${d.text}<br>
-    <span class="small">${d.seen?"Seen":"Delivered"}</span><br>
-    <button onclick="editMsg('${s.key}','${d.text}')">Edit</button>
-    <button onclick="delMsg('${s.key}')">Delete</button>
-   </div>`;
-  update(ref(db,chatType.value+"/"+s.key),{seen:true});
- });
+<script>
+function login(){
+  if(username.value && password.value){
+    localStorage.setItem("login","yes");
+    loginPage.classList.add("hidden");
+    homePage.classList.remove("hidden");
+  }
 }
-loadChat();
-
-window.sendMsg=()=>{
- if(!msgInput.value.trim())return;
- push(chatRef,{
-  user:currentUser,
-  text:msgInput.value,
-  seen:false
- });
- msgInput.value="";
- typingStatus(false);
-};
-
-window.delMsg=id=>{
- remove(ref(db,chatType.value+"/"+id));
-};
-
-window.editMsg=(id,text)=>{
- const n=prompt("Edit",text);
- if(n) update(ref(db,chatType.value+"/"+id),{text:n});
-};
-
-window.typingStatus=state=>{
- set(ref(db,"typing/"+currentUser),state);
-};
-
-onValue(ref(db,"typing"),s=>{
- let t="";
- s.forEach(c=>{
-  if(c.val()) t=c.key+" is typing...";
- });
- typing.innerText=t;
-});
-
-window.changeMood=()=>{
- document.body.style.background =
- mood.value=="Sad"?"#dfe6f0":
- mood.value=="Chill"?"#e8ffe8":"#ffe6ef";
-};
+function logout(){
+  localStorage.removeItem("login");
+  location.reload();
+}
+if(localStorage.getItem("login")){
+  loginPage.classList.add("hidden");
+  homePage.classList.remove("hidden");
+}
+function send(){
+  if(msg.value.trim()=="")return;
+  chat.innerHTML += `<div class="msg">${msg.value}</div>`;
+  msg.value="";
+}
+function toggleMusic(){
+  const s=document.getElementById("song");
+  s.paused ? s.play() : s.pause();
+}
+function changeMood(){
+  document.body.style.background =
+    document.body.style.background=="#e8f0ff" ? "#f3f6fb" : "#e8f0ff";
+}
 </script>
 
 </body>
