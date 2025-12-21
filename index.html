@@ -6,151 +6,149 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+:root{
+  --pink:#ff5c8d;
+  --light:#ffe6ef;
+  --white:#ffffff;
+}
 body{
   margin:0;
-  font-family:Arial;
-  background:#ffe6ef;
+  font-family:Arial,sans-serif;
+  background:var(--light);
+}
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:15px;
+}
+.logo{
+  text-align:center;
+  font-size:42px;
+  color:var(--pink);
+  font-weight:bold;
+}
+.top{
   text-align:center;
 }
-.hidden{display:none}
-h1{color:#ff5c8d;font-size:48px}
-.card{
-  background:#fff;
-  margin:20px;
-  padding:20px;
+.girl{
+  width:230px;
   border-radius:25px;
-}
-input,button{
-  width:90%;
-  padding:12px;
-  margin:6px;
-  border-radius:20px;
-  border:none;
-}
-button{
-  background:#ff5c8d;
-  color:white;
-  font-size:16px;
-}
-.msg{
-  background:#ffb3cc;
-  padding:10px;
-  margin:5px;
-  border-radius:15px;
-}
-img{
-  width:240px;
-  border-radius:30px;
-  animation:float 3s infinite;
+  animation:float 3s ease-in-out infinite;
 }
 @keyframes float{
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-10px)}
 }
+button{
+  width:100%;
+  background:var(--pink);
+  color:#fff;
+  border:none;
+  padding:14px;
+  border-radius:30px;
+  font-size:16px;
+  margin:6px 0;
+}
+.card{
+  background:#fff;
+  border-radius:22px;
+  padding:15px;
+  margin-top:15px;
+}
+.chat-box{
+  max-height:280px;
+  overflow-y:auto;
+  margin-bottom:10px;
+}
+.msg{
+  background:#ffb3cc;
+  padding:10px 14px;
+  margin:6px 0;
+  border-radius:20px;
+}
+input{
+  width:100%;
+  padding:12px;
+  border-radius:25px;
+  border:1px solid #ccc;
+}
+.hidden{display:none}
 </style>
 </head>
 
 <body>
+<div class="container">
 
-<!-- HOME -->
-<div id="home">
-  <h1>SEEZU</h1>
-  <img src="girl.jpg">
-  <button onclick="show('login')">Login / Signup</button>
+<div class="top">
+  <div class="logo">SEEZU</div>
+  <img src="girl.jpg" class="girl">
+  <button onclick="toggleMood()">🎵 Mood / Music</button>
 </div>
 
-<!-- LOGIN -->
-<div id="login" class="hidden card">
-  <h2>Login / Signup</h2>
+<div id="loginCard" class="card">
+  <h3>Login / Signup</h3>
   <input id="email" placeholder="Email">
   <input id="pass" type="password" placeholder="Password">
-  <button onclick="signup()">Signup</button>
-  <button onclick="login()">Login</button>
+  <button onclick="login()">Login / Signup</button>
 </div>
 
-<!-- CHAT -->
-<div id="chat" class="hidden card">
-  <h2>Live Chat</h2>
-  <div id="messages"></div>
+<div id="chatCard" class="card hidden">
+  <h3>Live Chat</h3>
+  <div class="chat-box" id="messages"></div>
   <input id="msg" placeholder="Type message">
-  <button onclick="sendMsg()">Send</button>
+  <button onclick="send()">Send</button>
   <button onclick="logout()">Logout</button>
-  <button onclick="toggleMusic()">Mood / Music</button>
 </div>
 
-<audio id="music" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
-</audio>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut }
-from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-import { getDatabase,ref,push,onValue,remove }
-from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getDatabase,ref,push,onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-const app = initializeApp({
-  apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
-  authDomain: "seezu-1066d.firebaseapp.com",
-  databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
-  projectId: "seezu-1066d"
-});
-
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-window.show = id=>{
-  ["home","login","chat"].forEach(x=>document.getElementById(x).classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
+const firebaseConfig={
+ apiKey:"AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
+ authDomain:"seezu-1066d.firebaseapp.com",
+ databaseURL:"https://seezu-1066d-default-rtdb.firebaseio.com",
+ projectId:"seezu-1066d",
+ storageBucket:"seezu-1066d.appspot.com",
+ messagingSenderId:"783067066542",
+ appId:"1:783067066542:web:70c23adf7372b259a6fd3f"
 };
 
-window.signup=()=>{
-  createUserWithEmailAndPassword(auth,email.value,pass.value)
-  .then(()=>show("chat"))
-  .catch(e=>alert(e.message));
-};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
 
 window.login=()=>{
-  signInWithEmailAndPassword(auth,email.value,pass.value)
-  .then(()=>show("chat"))
-  .catch(e=>alert(e.message));
-};
-
-window.logout=()=>signOut(auth).then(()=>show("home"));
-
-const chatRef = ref(db,"chat");
-window.sendMsg=()=>{
-  push(chatRef,{
-    text:msg.value,
-    uid:auth.currentUser.uid
-  });
-  msg.value="";
-};
-
-onValue(chatRef,snap=>{
-  messages.innerHTML="";
-  snap.forEach(s=>{
-    let d=s.val();
-    let div=document.createElement("div");
-    div.className="msg";
-    div.innerText=d.text;
-    if(d.uid===auth.currentUser?.uid){
-      div.onclick=()=>remove(ref(db,"chat/"+s.key));
-    }
-    messages.appendChild(div);
-  });
-});
-
-let playing=false;
-window.toggleMusic=()=>{
-  let m=document.getElementById("music");
-  playing?m.pause():m.play();
-  playing=!playing;
+ const e=email.value,p=pass.value;
+ signInWithEmailAndPassword(auth,e,p)
+ .catch(()=>createUserWithEmailAndPassword(auth,e,p));
 };
 
 onAuthStateChanged(auth,u=>{
-  if(u) show("chat");
+ if(u){
+  loginCard.classList.add("hidden");
+  chatCard.classList.remove("hidden");
+ }
 });
+
+window.send=()=>{
+ push(ref(db,"chat"),{text:msg.value});
+ msg.value="";
+};
+
+onChildAdded(ref(db,"chat"),s=>{
+ const d=document.createElement("div");
+ d.className="msg";
+ d.innerText=s.val().text;
+ messages.appendChild(d);
+});
+
+window.logout=()=>signOut(auth);
+
+window.toggleMood=()=>alert("Mood / Music ON");
 </script>
 
 </body>
