@@ -1,74 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>SEEZU | Live Chat</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEEZU | Login Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 body{
   margin:0;
-  font-family:Arial, sans-serif;
+  font-family:Arial;
   background:#ffe6f0;
-  color:#333;
 }
-.dark{
-  background:#121212;
-  color:#fff;
-}
-.container{
-  max-width:500px;
-  margin:auto;
-  padding:20px;
-}
-h1{
-  text-align:center;
-  color:#ff4d88;
-  font-size:48px;
-}
-.center{text-align:center;}
-img{
-  width:220px;
-  border-radius:20px;
+.dark{background:#121212;color:#fff;}
+.container{max-width:480px;margin:auto;padding:20px;}
+h1{text-align:center;color:#ff4d88;font-size:42px;}
+.card{background:#fff;padding:15px;border-radius:20px;margin-top:20px;}
+.dark .card{background:#1e1e1e;}
+input{
+ width:100%;padding:12px;margin:8px 0;
+ border-radius:25px;border:1px solid #ff9dbb;
 }
 button{
-  background:#ff4d88;
-  color:#fff;
-  border:none;
-  padding:12px 20px;
-  border-radius:25px;
-  cursor:pointer;
+ background:#ff4d88;color:#fff;border:none;
+ padding:12px 20px;border-radius:25px;cursor:pointer;
 }
-input{
-  width:100%;
-  padding:12px;
-  margin:8px 0;
-  border-radius:25px;
-  border:1px solid #ff9dbb;
-}
-.card{
-  background:#fff;
-  padding:15px;
-  border-radius:20px;
-  margin-top:20px;
-}
-.dark .card{background:#1e1e1e;}
-.chat-box{
-  max-height:300px;
-  overflow-y:auto;
-}
+.chat-box{max-height:300px;overflow-y:auto;}
 .msg{
-  background:#ffb3cc;
-  padding:8px 12px;
-  border-radius:15px;
-  margin:6px 0;
+ background:#ffb3cc;
+ padding:8px 12px;border-radius:15px;margin:6px 0;
 }
-.flex{
-  display:flex;
-  gap:10px;
-}
+.flex{display:flex;gap:10px;}
 .flex input{flex:1;}
 .hide{display:none;}
+.center{text-align:center;}
+img{width:220px;border-radius:20px;}
 </style>
 </head>
 
@@ -78,19 +43,16 @@ input{
 <h1>SEEZU</h1>
 
 <div class="center">
-<img src="3cdbce3-8550-4141-88dc-19a762c6dda6.jpg">
-<br><br>
-<button onclick="toggleDark()">🌙 Dark Mode</button>
+<img src="3cdbce3-8550-4141-88dc-19a762c6dda6.jpg"><br><br>
+<button onclick="dark()">🌙 Dark Mode</button>
 </div>
 
-<!-- AUTH -->
+<!-- LOGIN -->
 <div id="auth" class="card">
 <h3>Create / Login</h3>
-<input id="username" placeholder="Username (signup only)">
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="signup()">Create Account</button>
-<br><br>
+<input id="uname" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="signup()">Create Account</button><br><br>
 <button onclick="login()">Login</button>
 </div>
 
@@ -99,80 +61,71 @@ input{
 <h3>Live Chat</h3>
 <div id="messages" class="chat-box"></div>
 <div class="flex">
-<input id="message" placeholder="Type message">
-<button onclick="sendMsg()">Send</button>
+<input id="msg" placeholder="Type message">
+<button onclick="send()">Send</button>
 </div>
 <button onclick="logout()">Logout</button>
 </div>
 
 </div>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-import { getDatabase, ref, push, set, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
-  authDomain: "seezu-1066d.firebaseapp.com",
-  databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
-  projectId: "seezu-1066d",
-  storageBucket: "seezu-1066d.appspot.com",
-  messagingSenderId: "783067066542",
-  appId: "1:783067066542:web:70c23adf7372b259a6fd3f"
+ apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
+ authDomain: "seezu-1066d.firebaseapp.com",
+ databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
+ projectId: "seezu-1066d",
+ appId: "1:783067066542:web:70c23adf7372b259a6fd3f"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-window.toggleDark = ()=>{
- document.body.classList.toggle("dark");
+window.dark=()=>document.body.classList.toggle("dark");
+
+function makeEmail(name){
+ return name.toLowerCase()+"@seezu.com";
+}
+
+window.signup=()=>{
+ let u=uname.value.trim();
+ let p=pass.value;
+ if(!u||!p){alert("Fill all");return;}
+ createUserWithEmailAndPassword(auth, makeEmail(u), p)
+ .then(()=>alert("Account created"));
 };
 
-window.signup = ()=>{
- let email=email.value;
- let pass=password.value;
- let user=username.value;
- if(!user){alert("Username required");return;}
-
- createUserWithEmailAndPassword(auth,email,pass)
- .then(res=>{
-   set(ref(db,"users/"+res.user.uid),{username:user});
-   alert("Account Created");
- });
-};
-
-window.login = ()=>{
- signInWithEmailAndPassword(auth,email.value,password.value)
+window.login=()=>{
+ let u=uname.value.trim();
+ let p=pass.value;
+ signInWithEmailAndPassword(auth, makeEmail(u), p)
  .then(()=>{
-  authBox.style.display="none";
+  auth.style.display="none";
   chat.style.display="block";
  });
 };
 
-window.logout = ()=>{
+window.logout=()=>{
  signOut(auth);
  location.reload();
 };
 
-window.sendMsg = ()=>{
- let msg=message.value;
- if(!msg)return;
- push(ref(db,"messages"),{
-  text:msg,
-  uid:auth.currentUser.uid
- });
- message.value="";
+window.send=()=>{
+ if(!msg.value)return;
+ push(ref(db,"messages"),{text:msg.value});
+ msg.value="";
 };
 
-onChildAdded(ref(db,"messages"),snap=>{
- let d=snap.val();
- let div=document.createElement("div");
- div.className="msg";
- div.innerText=d.text;
- messages.appendChild(div);
+onChildAdded(ref(db,"messages"),s=>{
+ let d=document.createElement("div");
+ d.className="msg";
+ d.innerText=s.val().text;
+ messages.appendChild(d);
 });
 </script>
 
