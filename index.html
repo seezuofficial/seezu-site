@@ -8,78 +8,68 @@
 <style>
 :root{
   --pink:#ff5c8d;
-  --light:#f3f6fb;
-  --card:#ffffff;
+  --light:#f2f6fb;
+  --white:#ffffff;
 }
-*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Arial, sans-serif;
+  font-family: Arial, sans-serif;
   background:var(--light);
 }
-.hidden{display:none}
+.hidden{display:none;}
 
-/* ---------- LOGIN ---------- */
-#loginPage{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.login-box{
-  background:#fff;
-  padding:25px;
-  border-radius:25px;
-  width:90%;
-  max-width:380px;
-  text-align:center;
-  box-shadow:0 15px 40px rgba(0,0,0,.15);
-}
-.login-box img{
-  width:200px;
-  border-radius:25px;
-  animation:float 3s ease-in-out infinite;
-}
-.login-box input{
-  width:100%;
-  padding:14px;
-  border-radius:20px;
-  border:1px solid #ccc;
-  margin:10px 0;
-}
-.login-box button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:25px;
-  background:var(--pink);
-  color:#fff;
-  font-size:16px;
-  cursor:pointer;
-}
-
-/* ---------- HOME ---------- */
-#homePage{
+.container{
   max-width:420px;
   margin:auto;
-  padding:15px;
-}
-#logo{
+  padding:20px;
   text-align:center;
+}
+
+/* LOGO */
+#logo{
   font-size:48px;
   font-weight:bold;
   color:var(--pink);
-}
-#girl{
-  display:block;
-  margin:15px auto;
-  width:230px;
-  border-radius:30px;
-  animation:float 3s ease-in-out infinite;
-  box-shadow:0 10px 30px rgba(0,0,0,.2);
+  margin:20px 0;
 }
 
-/* Social */
+/* GIRL IMAGE */
+.girl{
+  width:260px;
+  border-radius:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* CARD */
+.card{
+  background:var(--white);
+  border-radius:25px;
+  padding:20px;
+  margin:18px 0;
+}
+
+/* INPUT */
+input{
+  width:100%;
+  padding:14px;
+  border-radius:30px;
+  border:1px solid #ddd;
+  margin:10px 0;
+}
+
+/* BUTTON */
+button{
+  width:100%;
+  padding:14px;
+  border-radius:30px;
+  border:none;
+  background:var(--pink);
+  color:#fff;
+  font-size:16px;
+  margin:8px 0;
+}
+
+/* SOCIAL */
 .social{
   display:flex;
   gap:10px;
@@ -87,165 +77,137 @@ body{
 }
 .social a{
   flex:1;
-  text-align:center;
-  padding:12px;
+  text-decoration:none;
   background:var(--pink);
   color:#fff;
-  text-decoration:none;
-  border-radius:20px;
+  padding:12px;
+  border-radius:30px;
   font-size:14px;
 }
 
-/* Cards */
-.card{
-  background:var(--card);
-  margin:15px 0;
-  padding:15px;
-  border-radius:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,.1);
-}
-
-/* Mood + Music */
-.flex{
+/* MOOD / MUSIC */
+.row{
   display:flex;
   gap:15px;
 }
-.mood-btn{
+.small-card{
   flex:1;
-  background:var(--pink);
-  color:#fff;
-  border:none;
+  padding:18px;
   border-radius:20px;
-  padding:20px;
-  font-size:16px;
-}
-.music{
-  flex:1;
-  text-align:center;
-}
-.music button{
-  border:none;
-  background:#eee;
-  padding:10px 14px;
-  border-radius:50%;
-  margin:5px;
+  background:var(--white);
 }
 
-/* Chat */
-.chat-box{
-  max-height:200px;
+/* CHAT */
+.chat{
+  max-height:160px;
   overflow:auto;
+  text-align:left;
 }
 .msg{
   background:#ffd1e1;
   padding:10px;
   border-radius:15px;
-  margin:8px 0;
-  font-size:14px;
-}
-input, select{
-  width:100%;
-  padding:12px;
-  border-radius:18px;
-  border:1px solid #ccc;
-  margin-top:10px;
-}
-.send-btn, .logout{
-  width:100%;
-  margin-top:10px;
-  padding:14px;
-  border:none;
-  border-radius:25px;
-  background:var(--pink);
-  color:#fff;
-  font-size:16px;
-}
-
-/* Anim */
-@keyframes float{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-12px)}
+  margin:6px 0;
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="loginPage">
-  <div class="login-box">
-    <img src="login-girl.jpg">
+<!-- 🔐 LOGIN PAGE -->
+<div id="loginPage" class="container">
+  <div id="logo">SEEZU</div>
+  <img src="girl_main.jpg" class="girl">
+  <div class="card">
     <input id="username" placeholder="Username">
     <input id="password" type="password" placeholder="Password">
     <button onclick="login()">Login / Signup</button>
   </div>
 </div>
 
-<!-- HOME -->
-<div id="homePage" class="hidden">
+<!-- 🏠 HOME PAGE -->
+<div id="homePage" class="container hidden">
 
   <div id="logo">SEEZU</div>
-  <img src="girl.jpg" id="girl">
+  <img src="girl_main.jpg" class="girl">
 
+  <!-- SOCIAL -->
   <div class="social">
-    <a href="https://instagram.com/fx_mausam.xo">Instagram</a>
+    <a href="#">Instagram</a>
     <a href="#">Snapchat</a>
-    <a href="https://wa.me/">WhatsApp</a>
+    <a href="#">WhatsApp</a>
   </div>
 
-  <div class="flex">
-    <button class="mood-btn" onclick="changeMood()">Mood</button>
-    <div class="card music">
+  <!-- MOOD + MUSIC -->
+  <div class="row">
+    <div class="small-card">
+      <button onclick="toggleMood()">Mood</button>
+    </div>
+    <div class="small-card">
       <div>Music</div>
-      <button>⏮</button>
-      <button onclick="toggleMusic()">⏯</button>
-      <button>⏭</button>
-      <audio id="song" src="music.mp3"></audio>
+      <button onclick="toggleMusic()">▶ / ⏸</button>
     </div>
   </div>
 
+  <!-- CHAT -->
   <div class="card">
-    <h3 style="text-align:center">Live Chat</h3>
-    <select>
-      <option>Public Chat</option>
-      <option>Private Chat</option>
-    </select>
-    <div class="chat-box" id="chat"></div>
+    <h3>Live Chat</h3>
+    <div class="chat" id="chatBox">
+      <div class="msg">Hello 😊</div>
+    </div>
     <input id="msg" placeholder="Type message">
-    <button class="send-btn" onclick="send()">Send</button>
-    <button class="logout" onclick="logout()">Logout</button>
+    <button onclick="sendMsg()">Send</button>
+    <button onclick="logout()">Logout</button>
   </div>
 
 </div>
 
 <script>
+/* LOGIN */
 function login(){
-  if(username.value && password.value){
-    localStorage.setItem("login","yes");
-    loginPage.classList.add("hidden");
-    homePage.classList.remove("hidden");
+  const u = username.value.trim();
+  const p = password.value.trim();
+  if(!u || !p){
+    alert("Username & Password likho 😑");
+    return;
   }
+  localStorage.setItem("seezu_user",u);
+  showHome();
 }
 function logout(){
-  localStorage.removeItem("login");
+  localStorage.removeItem("seezu_user");
   location.reload();
 }
-if(localStorage.getItem("login")){
+function showHome(){
   loginPage.classList.add("hidden");
   homePage.classList.remove("hidden");
 }
-function send(){
-  if(msg.value.trim()=="")return;
-  chat.innerHTML += `<div class="msg">${msg.value}</div>`;
+window.onload=()=>{
+  if(localStorage.getItem("seezu_user")){
+    showHome();
+  }
+}
+
+/* CHAT */
+function sendMsg(){
+  if(msg.value==="") return;
+  chatBox.innerHTML += `<div class="msg">${msg.value}</div>`;
   msg.value="";
+  chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+/* MOOD */
+let dark=false;
+function toggleMood(){
+  dark=!dark;
+  document.body.style.background = dark ? "#1a1a1a" : "#f2f6fb";
+}
+
+/* MUSIC (DEMO) */
+let playing=false;
 function toggleMusic(){
-  const s=document.getElementById("song");
-  s.paused ? s.play() : s.pause();
-}
-function changeMood(){
-  document.body.style.background =
-    document.body.style.background=="#e8f0ff" ? "#f3f6fb" : "#e8f0ff";
+  playing=!playing;
+  alert(playing ? "Music Playing 🎵" : "Music Paused ⏸");
 }
 </script>
 
