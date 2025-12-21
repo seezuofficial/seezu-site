@@ -7,205 +7,231 @@
 
 <style>
 :root{
-  --pink:#ff5c8d;
-  --light:#ffe6ef;
-  --white:#ffffff;
+ --pink:#ff5c8d;
+ --light:#eef3f9;
+ --card:#ffffff;
 }
 body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:var(--light);
+ margin:0;
+ font-family:Arial, sans-serif;
+ background:var(--light);
 }
 .container{
-  max-width:420px;
-  margin:auto;
-  padding:20px;
-  text-align:center;
+ max-width:420px;
+ margin:auto;
+ padding:20px;
+ text-align:center;
 }
+.hidden{display:none}
 .logo{
-  font-size:52px;
-  font-weight:bold;
-  color:var(--pink);
+ font-size:48px;
+ font-weight:bold;
+ color:var(--pink);
+ margin:20px 0;
 }
-img{
-  width:240px;
-  border-radius:25px;
-  margin:20px 0;
+.girl{
+ width:240px;
+ border-radius:25px;
+ box-shadow:0 10px 25px rgba(0,0,0,.2);
+ margin:15px auto;
+ display:block;
 }
 .card{
-  background:#fff;
-  padding:20px;
-  border-radius:25px;
-  margin-bottom:20px;
-}
-input{
-  width:100%;
-  padding:12px;
-  border-radius:25px;
-  border:1px solid #ccc;
-  margin:8px 0;
-}
-button{
-  background:var(--pink);
-  color:#fff;
-  border:none;
-  padding:12px;
-  border-radius:25px;
-  width:100%;
-  font-size:16px;
+ background:var(--card);
+ border-radius:25px;
+ padding:18px;
+ margin:15px 0;
+ box-shadow:0 5px 15px rgba(0,0,0,.1);
 }
 .social{
-  display:flex;
-  gap:10px;
+ display:flex;
+ gap:10px;
+ justify-content:center;
 }
 .social a{
-  flex:1;
-  background:var(--pink);
-  color:#fff;
-  padding:10px;
-  border-radius:20px;
-  text-decoration:none;
+ flex:1;
+ background:var(--pink);
+ color:#fff;
+ padding:12px;
+ border-radius:25px;
+ text-decoration:none;
+ font-size:14px;
 }
-.chat-box{
-  max-height:220px;
-  overflow:auto;
-  text-align:left;
+button{
+ padding:14px;
+ border:none;
+ border-radius:25px;
+ background:var(--pink);
+ color:#fff;
+ font-size:16px;
+ cursor:pointer;
+}
+input,select{
+ width:100%;
+ padding:12px;
+ border-radius:20px;
+ border:1px solid #ccc;
+ margin:8px 0;
+}
+.chat{
+ max-height:220px;
+ overflow:auto;
+ text-align:left;
 }
 .msg{
-  background:#ffb3cc;
-  padding:10px;
-  border-radius:15px;
-  margin:6px 0;
-  font-size:14px;
+ background:#ffc1d6;
+ padding:10px;
+ border-radius:15px;
+ margin:6px 0;
+ font-size:14px;
 }
-.small{
-  font-size:11px;
-  opacity:0.6;
+.typing{
+ font-size:12px;
+ opacity:.6;
 }
+
+/* 🔥 MESSAGE INPUT ROW */
 .msg-row{
-  display:flex;
-  gap:8px;
+ display:flex;
+ gap:8px;
+ align-items:center;
 }
 .msg-row input{
-  flex:1;
+ flex:1;
+ margin:0;
 }
-.hidden{display:none;}
+.msg-row button{
+ width:80px;
+ padding:12px 0;
+}
+
+/* MUSIC */
+.music-controls button{
+ width:auto;
+ margin:5px;
+ padding:8px 14px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<!-- LOGIN PAGE -->
+<div class="container" id="loginPage">
+ <div class="logo">SEEZU</div>
+ <img src="login-girl.jpg" class="girl">
+ <div class="card">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()" style="width:100%">Login</button>
+  <button onclick="signup()" style="width:100%;margin-top:8px">Signup</button>
+ </div>
+</div>
 
-  <!-- LOGIN -->
-  <div id="loginBox" class="card">
-    <div class="logo">SEEZU</div>
-    <img src="girl.jpg">
-    <input id="loginName" placeholder="Enter your name">
-    <button onclick="login()">Login</button>
+<!-- MAIN PAGE -->
+<div class="container hidden" id="mainPage">
+ <div class="logo">SEEZU</div>
+ <img src="girl.jpg" class="girl">
+
+ <div class="social">
+  <a href="https://instagram.com/fx_mausam.xo" target="_blank">Instagram</a>
+  <a href="#">Snapchat</a>
+  <a href="https://wa.me/" target="_blank">WhatsApp</a>
+ </div>
+
+ <div class="card">
+  <h3>Mood</h3>
+  <button style="width:100%" onclick="toggleMood()">Change Mood</button>
+ </div>
+
+ <div class="card">
+  <h3>Music</h3>
+  <audio id="music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+  <div class="music-controls">
+   <button onclick="music.play()">▶</button>
+   <button onclick="music.pause()">⏸</button>
   </div>
+ </div>
 
-  <!-- MAIN -->
-  <div id="mainBox" class="hidden">
+ <div class="card">
+  <h3>Live Chat</h3>
+  <select id="room" onchange="loadChat()">
+   <option value="public">Public Chat</option>
+   <option value="private">Private Chat</option>
+  </select>
 
-    <div class="logo">SEEZU</div>
-    <img src="girl.jpg">
+  <div class="chat" id="chat"></div>
+  <div class="typing" id="typing"></div>
 
-    <!-- SOCIAL -->
-    <div class="card">
-      <div class="social">
-        <a href="#">Instagram</a>
-        <a href="#">Snapchat</a>
-        <a href="#">WhatsApp</a>
-      </div>
-    </div>
-
-    <!-- MOOD -->
-    <div class="card">
-      <button onclick="toggleMood()">Mood Change</button>
-    </div>
-
-    <!-- MUSIC -->
-    <div class="card">
-      <h3>Music</h3>
-      <audio id="music" src="nepali_flute.mp3"></audio>
-      <button onclick="music.play()">▶ Play</button>
-      <button onclick="music.pause()">⏸ Pause</button>
-    </div>
-
-    <!-- CHAT -->
-    <div class="card">
-      <h3>Live Chat</h3>
-
-      <div class="chat-box" id="chat"></div>
-      <div class="small" id="typing"></div>
-
-      <div class="msg-row">
-        <input id="message" placeholder="Type message">
-        <button onclick="sendMessage()">Send</button>
-      </div>
-    </div>
-
-    <button onclick="logout()">Logout</button>
+  <!-- ✅ INPUT + SEND SIDE BY SIDE -->
+  <div class="msg-row">
+    <input id="msg" placeholder="Type message">
+    <button onclick="sendMsg()">Send</button>
   </div>
+ </div>
 
+ <button style="width:100%" onclick="logout()">Logout</button>
 </div>
 
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
-  authDomain: "seezu-1066d.firebaseapp.com",
-  databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
-  projectId: "seezu-1066d"
+const firebaseConfig={
+ apiKey:"AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
+ authDomain:"seezu-1066d.firebaseapp.com",
+ databaseURL:"https://seezu-1066d-default-rtdb.firebaseio.com",
+ projectId:"seezu-1066d"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const chatRef = ref(db,"messages");
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
 
-window.sendMessage = function(){
-  const text = message.value;
-  if(!text) return;
-  push(chatRef,{
-    user: localStorage.user,
-    text:text,
-    time: Date.now()
-  });
-  message.value="";
-};
+window.login=()=>signInWithEmailAndPassword(auth,email.value,password.value);
+window.signup=()=>createUserWithEmailAndPassword(auth,email.value,password.value);
+window.logout=()=>signOut(auth);
 
-onChildAdded(chatRef, snap=>{
-  const m = snap.val();
-  chat.innerHTML += `
-    <div class="msg">
-      <b>${m.user}:</b> ${m.text}
-      <div class="small">Delivered</div>
-    </div>`;
-  chat.scrollTop = chat.scrollHeight;
+onAuthStateChanged(auth,u=>{
+ if(u){
+  loginPage.classList.add("hidden");
+  mainPage.classList.remove("hidden");
+  loadChat();
+ }else{
+  loginPage.classList.remove("hidden");
+  mainPage.classList.add("hidden");
+ }
 });
-</script>
 
-<script>
-function login(){
-  const n = loginName.value.trim();
-  if(!n) return;
-  localStorage.user = n;
-  loginBox.classList.add("hidden");
-  mainBox.classList.remove("hidden");
-}
-function logout(){
-  localStorage.clear();
-  location.reload();
-}
-function toggleMood(){
-  document.body.style.background =
-    document.body.style.background === "rgb(255, 230, 239)"
-    ? "#e6f0ff" : "#ffe6ef";
-}
+window.loadChat=()=>{
+ const chatRef=ref(db,"chat/"+room.value);
+ chat.innerHTML="";
+ onChildAdded(chatRef,s=>{
+  chat.innerHTML+=`<div class="msg">${s.val().text}<br><small>✓ Seen</small></div>`;
+ });
+};
+
+window.sendMsg=()=>{
+ if(!msg.value)return;
+ push(ref(db,"chat/"+room.value),{
+  text:msg.value,
+  uid:auth.currentUser.uid
+ });
+ msg.value="";
+};
+
+msg.addEventListener("input",()=>{
+ set(ref(db,"typing"),{user:"typing"});
+ typing.innerText="Typing...";
+ setTimeout(()=>typing.innerText="",1000);
+});
+
+window.toggleMood=()=>{
+ document.body.style.background =
+ document.body.style.background=="rgb(238, 243, 249)" ? "#ffe6ef" : "#eef3f9";
+};
 </script>
 
 </body>
