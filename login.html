@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login | SEEZU</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
+  authDomain: "seezu-1066d.firebaseapp.com",
+  projectId: "seezu-1066d",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.login = () => {
+  const e = email.value;
+  const p = pass.value;
+  signInWithEmailAndPassword(auth,e,p)
+  .then(()=>location.href="chat.html")
+  .catch(err=>alert(err.message));
+}
+
+window.signup = () => {
+  const e = email.value;
+  const p = pass.value;
+  createUserWithEmailAndPassword(auth,e,p)
+  .then(()=>location.href="chat.html")
+  .catch(err=>alert(err.message));
+}
+</script>
+
+<style>
+body{background:#ffe6ef;font-family:Arial}
+.box{
+  max-width:350px;
+  margin:100px auto;
+  background:#fff;
+  padding:25px;
+  border-radius:20px;
+  text-align:center;
+}
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:20px;
+  border:1px solid #ccc;
+}
+button{
+  background:#ff5c8d;
+  color:#fff;
+  border:none;
+  padding:12px;
+  width:100%;
+  border-radius:20px;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+<div class="box">
+  <h2>Login / Signup</h2>
+  <input id="email" placeholder="Email">
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <button onclick="signup()">Signup</button>
+</div>
+</body>
+</html>
