@@ -90,8 +90,6 @@ input,select{
  font-size:12px;
  opacity:.6;
 }
-
-/* 🔥 MESSAGE INPUT ROW */
 .msg-row{
  display:flex;
  gap:8px;
@@ -105,8 +103,6 @@ input,select{
  width:80px;
  padding:12px 0;
 }
-
-/* MUSIC */
 .music-controls button{
  width:auto;
  margin:5px;
@@ -124,8 +120,8 @@ input,select{
  <div class="card">
   <input id="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
-  <button onclick="login()" style="width:100%">Login</button>
-  <button onclick="signup()" style="width:100%;margin-top:8px">Signup</button>
+  <button style="width:100%" onclick="login()">Login</button>
+  <button style="width:100%;margin-top:8px" onclick="signup()">Signup</button>
  </div>
 </div>
 
@@ -145,14 +141,21 @@ input,select{
   <button style="width:100%" onclick="toggleMood()">Change Mood</button>
  </div>
 
+ <!-- ===== MUSIC (REPLACED & FIXED) ===== -->
  <div class="card">
   <h3>Music</h3>
-  <audio id="music" src="nepali_flute.mp3"></audio>
+
+  <audio id="music" controls preload="none">
+    <source src="nepali_flute.mp3" type="audio/mpeg">
+    Your browser does not support audio.
+  </audio>
+
   <div class="music-controls">
-   <button onclick="music.play()">▶</button>
-   <button onclick="music.pause()">⏸</button>
+   <button onclick="document.getElementById('music').play()">▶</button>
+   <button onclick="document.getElementById('music').pause()">⏸</button>
   </div>
  </div>
+ <!-- ===== MUSIC END ===== -->
 
  <div class="card">
   <h3>Live Chat</h3>
@@ -164,7 +167,6 @@ input,select{
   <div class="chat" id="chat"></div>
   <div class="typing" id="typing"></div>
 
-  <!-- ✅ INPUT + SEND SIDE BY SIDE -->
   <div class="msg-row">
     <input id="msg" placeholder="Type message">
     <button onclick="sendMsg()">Send</button>
@@ -178,7 +180,7 @@ input,select{
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 const firebaseConfig={
  apiKey:"AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
@@ -224,9 +226,8 @@ window.sendMsg=()=>{
 };
 
 msg.addEventListener("input",()=>{
- set(ref(db,"typing"),{user:"typing"});
  typing.innerText="Typing...";
- setTimeout(()=>typing.innerText="",1000);
+ setTimeout(()=>typing.innerText="",800);
 });
 
 window.toggleMood=()=>{
