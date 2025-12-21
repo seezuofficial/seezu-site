@@ -1,131 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SEEZU | Login Chat</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEEZU | Login & Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   margin:0;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   background:#ffe6f0;
 }
-.dark{background:#121212;color:#fff;}
-.container{max-width:480px;margin:auto;padding:20px;}
-h1{text-align:center;color:#ff4d88;font-size:42px;}
-.card{background:#fff;padding:15px;border-radius:20px;margin-top:20px;}
-.dark .card{background:#1e1e1e;}
+.container{
+  max-width:420px;
+  margin:auto;
+  padding:20px;
+}
+h1{
+  text-align:center;
+  color:#ff4d88;
+  font-size:44px;
+}
+.center{text-align:center;}
+img{
+  width:240px;
+  border-radius:25px;
+  margin:15px 0;
+}
+.card{
+  background:#fff;
+  padding:15px;
+  border-radius:20px;
+  margin-top:20px;
+}
 input{
- width:100%;padding:12px;margin:8px 0;
- border-radius:25px;border:1px solid #ff9dbb;
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:25px;
+  border:1px solid #ff9dbb;
 }
 button{
- background:#ff4d88;color:#fff;border:none;
- padding:12px 20px;border-radius:25px;cursor:pointer;
+  background:#ff4d88;
+  color:#fff;
+  border:none;
+  padding:12px 20px;
+  border-radius:25px;
+  cursor:pointer;
+  width:100%;
 }
-.chat-box{max-height:300px;overflow-y:auto;}
-.msg{
- background:#ffb3cc;
- padding:8px 12px;border-radius:15px;margin:6px 0;
-}
-.flex{display:flex;gap:10px;}
-.flex input{flex:1;}
 .hide{display:none;}
-.center{text-align:center;}
-img{width:220px;border-radius:20px;}
+.chat-box{
+  max-height:260px;
+  overflow-y:auto;
+  margin-bottom:10px;
+}
+.msg{
+  background:#ffb3cc;
+  padding:8px 12px;
+  border-radius:15px;
+  margin:6px 0;
+}
+.flex{
+  display:flex;
+  gap:10px;
+}
+.flex input{flex:1;}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
 <h1>SEEZU</h1>
 
 <div class="center">
-<img src="3cdbce3-8550-4141-88dc-19a762c6dda6.jpg"><br><br>
-<button onclick="dark()">🌙 Dark Mode</button>
+  <!-- GIRL IMAGE -->
+  <img src="3cbdc3-9550-4141-88dc-19a762c6dda6.jpg" alt="girl">
 </div>
 
-<!-- LOGIN -->
-<div id="auth" class="card">
-<h3>Create / Login</h3>
-<input id="uname" placeholder="Username">
-<input id="pass" type="password" placeholder="Password">
-<button onclick="signup()">Create Account</button><br><br>
-<button onclick="login()">Login</button>
+<!-- LOGIN / SIGNUP -->
+<div id="authBox" class="card">
+  <h3>Create / Login</h3>
+  <input id="uname" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
+
+  <button onclick="signup()">Create Account</button>
+  <br><br>
+  <button onclick="login()">Login</button>
 </div>
 
-<!-- CHAT -->
-<div id="chat" class="card hide">
-<h3>Live Chat</h3>
-<div id="messages" class="chat-box"></div>
-<div class="flex">
-<input id="msg" placeholder="Type message">
-<button onclick="send()">Send</button>
-</div>
-<button onclick="logout()">Logout</button>
+<!-- CHAT PAGE -->
+<div id="chatBox" class="card hide">
+  <h3>💬 Live Chat</h3>
+
+  <div id="messages" class="chat-box"></div>
+
+  <div class="flex">
+    <input id="msg" placeholder="Type message">
+    <button onclick="sendMsg()">Send</button>
+  </div>
+
+  <br>
+  <button onclick="logout()">Logout</button>
 </div>
 
 </div>
 
+<!-- 🔥 FIREBASE + LOGIC -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 const firebaseConfig = {
- apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
- authDomain: "seezu-1066d.firebaseapp.com",
- databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
- projectId: "seezu-1066d",
- appId: "1:783067066542:web:70c23adf7372b259a6fd3f"
+  apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
+  authDomain: "seezu-1066d.firebaseapp.com",
+  databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
+  projectId: "seezu-1066d",
+  appId: "1:783067066542:web:70c23adf7372b259a6fd3f"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-window.dark=()=>document.body.classList.toggle("dark");
-
 function makeEmail(name){
- return name.toLowerCase()+"@seezu.com";
+  return name.toLowerCase()+"@seezu.com";
 }
 
-window.signup=()=>{
- let u=uname.value.trim();
- let p=pass.value;
- if(!u||!p){alert("Fill all");return;}
- createUserWithEmailAndPassword(auth, makeEmail(u), p)
- .then(()=>alert("Account created"));
+window.signup = ()=>{
+  const u = uname.value.trim();
+  const p = pass.value;
+  if(!u || !p){
+    alert("Fill username & password");
+    return;
+  }
+  createUserWithEmailAndPassword(auth, makeEmail(u), p)
+  .then(()=>alert("Account created. Now login."))
+  .catch(e=>alert(e.message));
 };
 
-window.login=()=>{
- let u=uname.value.trim();
- let p=pass.value;
- signInWithEmailAndPassword(auth, makeEmail(u), p)
- .then(()=>{
-  auth.style.display="none";
-  chat.style.display="block";
- });
+window.login = ()=>{
+  const u = uname.value.trim();
+  const p = pass.value;
+  signInWithEmailAndPassword(auth, makeEmail(u), p)
+  .then(()=>{
+    document.getElementById("authBox").classList.add("hide");
+    document.getElementById("chatBox").classList.remove("hide");
+  })
+  .catch(e=>alert(e.message));
 };
 
-window.logout=()=>{
- signOut(auth);
- location.reload();
+window.logout = ()=>{
+  signOut(auth).then(()=>location.reload());
 };
 
-window.send=()=>{
- if(!msg.value)return;
- push(ref(db,"messages"),{text:msg.value});
- msg.value="";
+window.sendMsg = ()=>{
+  if(!msg.value) return;
+  push(ref(db,"messages"),{
+    text: msg.value
+  });
+  msg.value="";
 };
 
-onChildAdded(ref(db,"messages"),s=>{
- let d=document.createElement("div");
- d.className="msg";
- d.innerText=s.val().text;
- messages.appendChild(d);
+onChildAdded(ref(db,"messages"), snap=>{
+  const div=document.createElement("div");
+  div.className="msg";
+  div.innerText=snap.val().text;
+  messages.appendChild(div);
 });
 </script>
 
