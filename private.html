@@ -1,17 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Private Chat</title>
+<title>SEEZU | Private Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-body{background:#ffe6ef;font-family:Arial;text-align:center}
-.box{background:#fff;margin:50px auto;padding:20px;border-radius:20px;width:320px}
+body{
+ margin:0;
+ font-family:Arial, sans-serif;
+ background:linear-gradient(135deg,#ffd1e8,#f3e5f5);
+}
+.chat-box{
+ max-width:420px;
+ margin:auto;
+ height:100vh;
+ display:flex;
+ flex-direction:column;
+}
+.header{
+ padding:15px;
+ text-align:center;
+ font-size:20px;
+ font-weight:bold;
+ color:#fff;
+ background:#ff5c8d;
+}
+.messages{
+ flex:1;
+ padding:10px;
+ overflow-y:auto;
+}
+.msg{
+ background:#fff;
+ padding:8px 12px;
+ border-radius:14px;
+ margin-bottom:8px;
+ position:relative;
+}
+.nick{
+ font-size:12px;
+ color:#ff5c8d;
+ font-weight:bold;
+}
+.controls{
+ font-size:12px;
+ margin-top:4px;
+}
+.controls span{
+ margin-right:10px;
+ color:#888;
+ cursor:pointer;
+}
+.input-area{
+ display:flex;
+ padding:10px;
+ background:#fff;
+}
+input{
+ flex:1;
+ padding:10px;
+ border-radius:20px;
+ border:1px solid #ccc;
+ outline:none;
+}
+button{
+ margin-left:8px;
+ border:none;
+ background:#ff5c8d;
+ color:#fff;
+ padding:10px 15px;
+ border-radius:20px;
+}
 </style>
 </head>
+
 <body>
-<div class="box">
-  <h3>🔐 Private Chat</h3>
-  <p>(User-to-User logic ready for next step)</p>
+
+<div class="chat-box">
+ <div class="header">🔒 Private Chat</div>
+
+ <div id="messages" class="messages"></div>
+
+ <div class="input-area">
+  <input id="msg" placeholder="Type secretly 💗">
+  <button onclick="send()">Send</button>
+ </div>
 </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
+const firebaseConfig = {
+ apiKey: "PASTE_YOUR_KEY",
+ authDomain: "seezu-1066d.firebaseapp.com",
+ databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
+ projectId: "seezu-1066d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let nickname = localStorage.getItem("nick") || prompt("Enter nickname");
+localStorage.setItem("nick", nickname);
+
+const chatRef = ref(db,"privateChat");
+
+window.send = ()=>{
+ let text = msg.value.trim();
+ if(!text) return;
+ push(chatRef,{
+  nick:nickname,
+  text:text,
+  time:Date.now()
+ });
+ msg.value="";
+};
+
+onValue(chatRef,snap=>{
+ messages.innerHTML="";
+ snap.forEach(c=>{
+  let d=c.val();
+  let div=document.createElement("div");
+  div.className="msg";
+  div.innerHTML=`
+   <div class="nick">${d.nick}</div>
+   <div id="t_${c.key}">${d.text}</div>
+   <div class="controls">
+    <span onclick="editMsg('${c.key}')">edit</span>
+    <span onclick="delMsg('${c.key}')">delete</span>
+    <span onclick="unsend('${c.key}')">unsend</span>
+   </div>`;
+  messages.appendChild(div);
+ });
+ messages.scrollTop=messages.scrollHeight;
+});
+
+window.editMsg=(id)=>{
+ let newText=prompt("Edit message");
+ if(newText)
+ update(ref(db,"privateChat/"+id),{text:newText});
+};
+
+window.delMsg=(id)=>{
+ remove(ref(db,"privateChat/"+id));
+};
+
+window.unsend=(id)=>{
+ update(ref(db,"privateChat/"+id),{text:"🚫 Message unsent"});
+};
+</script>
 </body>
 </html>
