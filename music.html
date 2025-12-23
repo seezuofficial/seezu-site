@@ -1,91 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SEEZU | Music</title>
-
-<style>
-:root{
- --pink:#ff5c8d;
- --card:#ffffff;
-}
-body{
- margin:0;
- font-family:Arial, sans-serif;
- background:linear-gradient(135deg,#fce4ec,#e3f2fd);
-}
-.app{
- max-width:420px;
- margin:auto;
- padding:16px;
-}
-.header{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin-bottom:15px;
-}
-.logo{
- font-size:26px;
- font-weight:bold;
- color:var(--pink);
-}
-.card{
- background:var(--card);
- border-radius:22px;
- padding:18px;
- box-shadow:0 6px 18px rgba(0,0,0,.12);
- text-align:center;
-}
-.btn{
- background:var(--pink);
- color:#fff;
- border:none;
- padding:14px;
- border-radius:25px;
- font-size:18px;
- cursor:pointer;
-}
-.controls{
- display:flex;
- justify-content:space-around;
- margin-top:15px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="app">
-
- <!-- HEADER -->
- <div class="header">
-  <div class="logo">SEEZU</div>
-  <button class="btn" onclick="history.back()">⬅ Back</button>
- </div>
-
- <!-- MUSIC PLAYER -->
- <div class="card">
-  <h3 id="songName">🎧 Chill Lofi Beats</h3>
-
-  <audio id="player"></audio>
-
-  <div class="controls">
-   <button class="btn" onclick="prevSong()">⏪</button>
-   <button class="btn" id="playPauseBtn" onclick="togglePlay()">▶️</button>
-   <button class="btn" onclick="nextSong()">⏩</button>
-  </div>
- </div>
-
-</div>
-
 <script>
 const songs = [
- { name:"Lofi Chill 1", file:"songs/song1.mp3" },
- { name:"Lofi Chill 2", file:"songs/song2.mp3" },
- { name:"Lofi Chill 3", file:"songs/song3.mp3" },
- { name:"Lofi Chill 4", file:"songs/song4.mp3" }
+ {
+  name: "Oh Humsafar",
+  file: "songs/Oh_Humsafar_Lyrical___Neha_Kakkar,_Himansh_Kohli___Tony_Kakkar___Bhushan_Kumar___Manoj_Muntashir(128k).mp3"
+ },
+ {
+  name: "Saathiya",
+  file: "songs/SAATHIYA_-_SINGHAM_-_SHREYA_GHOSHAL(128k).mp3"
+ },
+ {
+  name: "Mitwa",
+  file: "songs/Mitwa_Full_Video,_KANK_-_Shahrukh_Khan,Rani_Mukherjee_Shafqat_Amanat_Ali_Shankar_Mahadevan(128k).mp3"
+ },
+ {
+  name: "Nepali Flute",
+  file: "songs/NEPALI_FLUTE_MUSIC_VOL.1___Free_Nepali_Music____Relaxing_Music_2024(128k).mp3"
+ }
 ];
 
 let currentSong = 0;
@@ -126,6 +56,3 @@ function prevSong(){
 
 player.addEventListener("ended", nextSong);
 </script>
-
-</body>
-</html>
