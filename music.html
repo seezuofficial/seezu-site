@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,6 +34,7 @@ body{
  padding:18px;
  box-shadow:0 6px 18px rgba(0,0,0,.12);
  text-align:center;
+ margin-bottom:20px;
 }
 .btn{
  background:#ff5c8d;
@@ -48,6 +50,14 @@ body{
  justify-content:space-around;
  margin-top:15px;
 }
+
+/* 🎭 GIF AREA */
+.gif-card img{
+ width:100%;
+ height:280px;
+ object-fit:contain;
+ border-radius:20px;
+}
 </style>
 </head>
 
@@ -55,11 +65,13 @@ body{
 
 <div class="app">
 
+ <!-- HEADER -->
  <div class="header">
   <div class="logo">SEEZU</div>
   <button class="btn" onclick="history.back()">⬅</button>
  </div>
 
+ <!-- MUSIC PLAYER -->
  <div class="card">
   <h3 id="songName">🎧 Music Player</h3>
 
@@ -67,30 +79,36 @@ body{
 
   <div class="controls">
    <button class="btn" onclick="prevSong()">⏪</button>
-   <button class="btn" onclick="togglePlay()">▶️</button>
+   <button class="btn" id="playPauseBtn" onclick="togglePlay()">▶️</button>
    <button class="btn" onclick="nextSong()">⏩</button>
   </div>
+ </div>
+
+ <!-- 🎭 DANCE GIF AREA -->
+ <div class="card gif-card">
+  <img id="danceGif" src="" alt="Dance Gif">
  </div>
 
 </div>
 
 <script>
+/* 🎵 SONG LIST */
 const songs = [
  {
-  name: "Oh Humsafar",
-  file: "songs/Oh_Humsafar_Lyrical___Neha_Kakkar,_Himansh_Kohli___Tony_Kakkar___Bhushan_Kumar___Manoj_Muntashir(128k).mp3"
+  name:"Oh Humsafar",
+  file:"songs/Oh_Humsafar_Lyrical___Neha_Kakkar,_Himansh_Kohli___Tony_Kakkar___Bhushan_Kumar___Manoj_Muntashir(128k).mp3"
  },
  {
-  name: "Saathiya",
-  file: "songs/SAATHIYA_-_SINGHAM_-_SHREYA_GHOSHAL(128k).mp3"
+  name:"Saathiya",
+  file:"songs/SAATHIYA_-_SINGHAM_-_SHREYA_GHOSHAL(128k).mp3"
  },
  {
-  name: "Mitwa",
-  file: "songs/Mitwa_Full_Video,_KANK_-_Shahrukh_Khan,Rani_Mukherjee_Shafqat_Amanat_Ali_Shankar_Mahadevan(128k).mp3"
+  name:"Mitwa",
+  file:"songs/Mitwa_Full_Video,_KANK_-_Shahrukh_Khan,Rani_Mukherjee_Shafqat_Amanat_Ali_Shankar_Mahadevan(128k).mp3"
  },
  {
-  name: "Nepali Flute",
-  file: "songs/NEPALI_FLUTE_MUSIC_VOL.1___Free_Nepali_Music____Relaxing_Music_2024(128k).mp3"
+  name:"Nepali Flute",
+  file:"songs/NEPALI_FLUTE_MUSIC_VOL.1___Free_Nepali_Music____Relaxing_Music_2024(128k).mp3"
  }
 ];
 
@@ -100,16 +118,13 @@ const player = document.getElementById("player");
 const songName = document.getElementById("songName");
 const playPauseBtn = document.getElementById("playPauseBtn");
 
-loadSong();
-
 /* LOAD SONG */
-function loadSong(autoPlay=false){
+function loadSong(auto=false){
  player.src = songs[currentSong].file;
  songName.innerText = "🎧 " + songs[currentSong].name;
- if(autoPlay){
-  player.play();
- }
+ if(auto) player.play();
 }
+loadSong();
 
 /* PLAY / PAUSE */
 function togglePlay(){
@@ -120,29 +135,39 @@ function togglePlay(){
  }
 }
 
-/* NEXT SONG */
+/* NEXT / PREV */
 function nextSong(){
  currentSong = (currentSong + 1) % songs.length;
  loadSong(true);
 }
-
-/* PREVIOUS SONG */
 function prevSong(){
  currentSong = (currentSong - 1 + songs.length) % songs.length;
  loadSong(true);
 }
 
-/* 🔥 AUTO ICON CHANGE */
-player.addEventListener("play", () => {
- playPauseBtn.innerText = "⏸️";
-});
+/* ICON CHANGE */
+player.addEventListener("play",()=> playPauseBtn.innerText="⏸️");
+player.addEventListener("pause",()=> playPauseBtn.innerText="▶️");
 
-player.addEventListener("pause", () => {
- playPauseBtn.innerText = "▶️";
-});
-
-/* 🔥 SONG END → AUTO NEXT */
+/* AUTO NEXT */
 player.addEventListener("ended", nextSong);
+
+/* 🎭 GIF LIST (5 sec auto change) */
+const gifs = [
+ "https://media.tenor.com/6xq8xZq9WZAAAAAC/anime-dance.gif",
+ "https://media.tenor.com/tzjZ9s8ZQYAAAAAC/anime-girl-dance.gif",
+ "https://media.tenor.com/8KJ9Z5z6z5AAAAAC/anime-cute-dance.gif"
+];
+
+let gifIndex = 0;
+const danceGif = document.getElementById("danceGif");
+
+danceGif.src = gifs[0];
+
+setInterval(()=>{
+ gifIndex = (gifIndex + 1) % gifs.length;
+ danceGif.src = gifs[gifIndex];
+},5000);
 </script>
 
 </body>
