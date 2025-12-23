@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SEEZU | Public Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+ margin:0;
+ font-family:Arial;
+ background:#fce4ec;
+}
+.header{
+ background:#ff5c8d;
+ color:white;
+ text-align:center;
+ padding:15px;
+ font-size:20px;
+}
+.msg{
+ background:white;
+ margin:8px;
+ padding:10px;
+ border-radius:15px;
+}
+.nick{
+ color:#ff5c8d;
+ font-weight:bold;
+}
+.input{
+ position:fixed;
+ bottom:0;
+ width:100%;
+ display:flex;
+ background:#fff;
+ padding:10px;
+}
+input{
+ flex:1;
+ border-radius:20px;
+ padding:10px;
+ border:1px solid #ccc;
+}
+button{
+ margin-left:8px;
+ background:#ff5c8d;
+ color:white;
+ border:none;
+ border-radius:20px;
+ padding:10px 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🌍 Public Chat</div>
+<div id="msgs"></div>
+
+<div class="input">
+ <input id="text" placeholder="Say hi to everyone 👋">
+ <button onclick="send()">Send</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
+const firebaseConfig = {
+ apiKey: "PASTE_YOUR_KEY",
+ authDomain: "seezu-1066d.firebaseapp.com",
+ databaseURL: "https://seezu-1066d-default-rtdb.firebaseio.com",
+ projectId: "seezu-1066d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let nick = localStorage.getItem("nick") || prompt("Enter nickname");
+localStorage.setItem("nick",nick);
+
+const refChat = ref(db,"publicChat");
+
+window.send=()=>{
+ let t=text.value.trim();
+ if(!t) return;
+ push(refChat,{nick:nick,text:t});
+ text.value="";
+};
+
+onValue(refChat,s=>{
+ msgs.innerHTML="";
+ s.forEach(c=>{
+  let d=c.val();
+  msgs.innerHTML+=`
+  <div class="msg">
+   <div class="nick">${d.nick}</div>
+   <div>${d.text}</div>
+   <small onclick="remove(ref(db,'publicChat/${c.key}'))">delete</small>
+  </div>`;
+ });
+});
+</script>
+</body>
+</html>
