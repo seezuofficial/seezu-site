@@ -1,58 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Chat | SEEZU</title>
-<meta name="viewport" content="width=device-width">
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
-  databaseURL:"https://seezu-1066d-default-rtdb.firebaseio.com"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window.sendMsg = ()=>{
-  push(ref(db,"public"),{msg:msg.value});
-  msg.value="";
-}
-
-onChildAdded(ref(db,"public"),snap=>{
-  box.innerHTML += `<div class="m">${snap.val().msg}</div>`;
-});
-</script>
+<title>SEEZU | Live Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{background:#ffe6ef;font-family:Arial}
-.chat{
-  max-width:420px;
-  margin:auto;
-  background:#fff;
-  padding:20px;
-  border-radius:20px;
+:root{
+ --pink:#ff5c8d;
+ --light:#eef3f9;
+ --card:#ffffff;
 }
-.m{
-  background:#ffb3c7;
-  padding:10px;
-  border-radius:15px;
-  margin:8px 0;
+body{
+ margin:0;
+ font-family:Arial, sans-serif;
+ background:var(--light);
+}
+.container{
+ max-width:420px;
+ margin:auto;
+ padding:20px;
+ text-align:center;
+}
+.card{
+ background:var(--card);
+ border-radius:25px;
+ padding:18px;
+ margin-top:30px;
+ box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+h2{
+ margin-top:0;
+ color:var(--pink);
+}
+.chat-box{
+ height:220px;
+ overflow-y:auto;
+ border:1px solid #ddd;
+ border-radius:15px;
+ padding:10px;
+ text-align:left;
+ margin-bottom:10px;
+ background:#fff;
+}
+.msg{
+ background:#ffd6e5;
+ padding:8px 12px;
+ border-radius:12px;
+ margin:6px 0;
+ font-size:14px;
+}
+.input-row{
+ display:flex;
+ gap:8px;
+}
+.input-row input{
+ flex:1;
+ padding:10px;
+ border-radius:20px;
+ border:1px solid #ccc;
+}
+.input-row button,
+.btn{
+ padding:10px 14px;
+ border:none;
+ border-radius:20px;
+ background:var(--pink);
+ color:#fff;
+ cursor:pointer;
+}
+.btn{
+ display:block;
+ margin-top:12px;
+ text-decoration:none;
 }
 </style>
 </head>
 
 <body>
-<div class="chat">
-  <h3>Live Chat</h3>
-  <div id="box"></div>
-  <input id="msg" placeholder="Type message">
-  <button onclick="sendMsg()">Send</button>
-  <br><br>
-  <button onclick="location.href='private.html'">Private Chat</button>
+
+<div class="container">
+ <div class="card">
+  <h2>Live Chat</h2>
+
+  <div class="chat-box" id="chat">
+   <!-- messages -->
+  </div>
+
+  <div class="input-row">
+   <input id="msg" placeholder="Type message">
+   <button onclick="sendMsg()">Send</button>
+  </div>
+
+  <a class="btn" href="private.html">Private Chat</a>
+ </div>
 </div>
+
+<script>
+function sendMsg(){
+ if(!msg.value) return;
+ const div=document.createElement("div");
+ div.className="msg";
+ div.innerText=msg.value;
+ chat.appendChild(div);
+ msg.value="";
+ chat.scrollTop=chat.scrollHeight;
+}
+</script>
+
 </body>
 </html>
