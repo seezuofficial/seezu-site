@@ -90,19 +90,28 @@ const songs = [
  },
  {
   name: "Nepali Flute",
-  file: "songs/NEPALI_FLUTE_MUSIC_VOL.1___Free_Nepali_Music____Relaxing_Music_2024(128k)"
+  file: "songs/NEPALI_FLUTE_MUSIC_VOL.1___Free_Nepali_Music____Relaxing_Music_2024(128k).mp3"
  }
 ];
 
-let i = 0;
+let currentSong = 0;
+
 const player = document.getElementById("player");
 const songName = document.getElementById("songName");
+const playPauseBtn = document.getElementById("playPauseBtn");
 
-function loadSong(){
- player.src = songs[i].file;
- songName.innerText = "🎧 " + songs[i].name;
+loadSong();
+
+/* LOAD SONG */
+function loadSong(autoPlay=false){
+ player.src = songs[currentSong].file;
+ songName.innerText = "🎧 " + songs[currentSong].name;
+ if(autoPlay){
+  player.play();
+ }
 }
 
+/* PLAY / PAUSE */
 function togglePlay(){
  if(player.paused){
   player.play();
@@ -111,19 +120,29 @@ function togglePlay(){
  }
 }
 
+/* NEXT SONG */
 function nextSong(){
- i = (i+1)%songs.length;
- loadSong();
- player.play();
+ currentSong = (currentSong + 1) % songs.length;
+ loadSong(true);
 }
 
+/* PREVIOUS SONG */
 function prevSong(){
- i = (i-1+songs.length)%songs.length;
- loadSong();
- player.play();
+ currentSong = (currentSong - 1 + songs.length) % songs.length;
+ loadSong(true);
 }
 
-loadSong();
+/* 🔥 AUTO ICON CHANGE */
+player.addEventListener("play", () => {
+ playPauseBtn.innerText = "⏸️";
+});
+
+player.addEventListener("pause", () => {
+ playPauseBtn.innerText = "▶️";
+});
+
+/* 🔥 SONG END → AUTO NEXT */
+player.addEventListener("ended", nextSong);
 </script>
 
 </body>
