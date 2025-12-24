@@ -15,6 +15,7 @@ body{
  margin:0;
  font-family:Arial, sans-serif;
  background:var(--light);
+ overflow:hidden;
 }
 .container{
  width:100%;
@@ -36,6 +37,8 @@ body{
  max-width:420px;
  margin:0 auto;
  box-shadow:0 5px 15px rgba(0,0,0,.1);
+ position:relative;
+ z-index:2;
 }
 .login-img{
  width:220px;
@@ -72,6 +75,58 @@ button{
  font-size:13px;
  margin-top:10px;
 }
+
+/* 🌸 ENTER OVERLAY */
+.enter-overlay{
+ position:fixed;
+ inset:0;
+ background:rgba(255,92,141,.25);
+ backdrop-filter:blur(6px);
+ display:none;
+ justify-content:center;
+ align-items:center;
+ z-index:9999;
+ overflow:hidden;
+}
+.enter-box{
+ background:#fff0f6;
+ padding:22px 28px;
+ border-radius:25px;
+ font-size:18px;
+ color:#ff5c8d;
+ box-shadow:0 15px 30px rgba(0,0,0,.25);
+ min-width:260px;
+ white-space:pre-line;
+ position:relative;
+ z-index:2;
+}
+
+/* 💖 FLOATING HEARTS */
+.heart{
+ position:absolute;
+ bottom:-20px;
+ color:#ff5c8d;
+ font-size:18px;
+ animation:float 3s linear forwards;
+ opacity:.8;
+}
+@keyframes float{
+ from{transform:translateY(0);opacity:1}
+ to{transform:translateY(-120vh);opacity:0}
+}
+
+/* 🕷️ SPIDER ENTRY */
+.spider{
+ position:absolute;
+ top:-80px;
+ left:50%;
+ transform:translateX(-50%);
+ font-size:42px;
+ animation:spiderDrop 1.5s ease forwards;
+}
+@keyframes spiderDrop{
+ to{top:110px}
+}
 </style>
 </head>
 
@@ -81,7 +136,8 @@ button{
  <div class="logo">SEEZU</div>
 
  <div class="card">
-  <img src="login-girl.jpg" class="login-img" alt="Login">
+  <!-- 👈 PHOTO WAPAS -->
+  <img src="login-girl.jpg" class="login-img" alt="Login Girl">
 
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="password" placeholder="Password">
@@ -90,22 +146,40 @@ button{
   <button onclick="signup()">Signup</button>
 
   <div class="link" onclick="forgotPassword()">Forgot Password?</div>
-
   <div class="msg" id="msg"></div>
  </div>
 </div>
 
-<!-- FIREBASE -->
+<!-- 🌸 ENTERING HOME OVERLAY -->
+<div id="enterOverlay" class="enter-overlay">
+ <div class="spider">🕷️</div>
+ <div class="enter-box">
+  <span id="enterText"></span>
+ </div>
+</div>
+
+<!-- 🔊 TYPING SOUND -->
+<audio id="typeSound" preload="auto"
+ src="https://assets.mixkit.co/sfx/preview/mixkit-typewriter-soft-1125.mp3">
+</audio>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import {
  getAuth,
  signInWithEmailAndPassword,
  createUserWithEmailAndPassword,
- sendPasswordResetEmail,
- onAuthStateChanged
+ sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
+import {
+ getFirestore,
+ doc,
+ setDoc,
+ getDoc
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+/* 🔥 FIREBASE (TUMHARA HI) */
 const firebaseConfig = {
  apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
  authDomain: "seezu-1066d.firebaseapp.com",
@@ -114,50 +188,78 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-// ✅ LOGIN
-window.login = () => {
- signInWithEmailAndPassword(auth, email.value, password.value)
- .then(() => {
-   window.location.href = "home.html"; // ✅ FIXED
+const overlay = document.getElementById("enterOverlay");
+const enterText = document.getElementById("enterText");
+const typeSound = document.getElementById("typeSound");
+
+/* 💖 HEART */
+function createHeart(){
+ const h=document.createElement("div");
+ h.className="heart";
+ h.innerText="💖";
+ h.style.left=Math.random()*100+"%";
+ h.style.fontSize=12+Math.random()*18+"px";
+ overlay.appendChild(h);
+ setTimeout(()=>h.remove(),3000);
+}
+
+/* 💬 SHOW ENTERING (USERNAME FROM FIRESTORE) */
+async function showEntering(uid){
+ const snap = await getDoc(doc(db,"users",uid));
+ const name = snap.exists()? snap.data().username : "Friend";
+
+ overlay.style.display="flex";
+ enterText.innerText="";
+
+ const msg = `Hey ${name} 💖\nEntering Home...`;
+ let i=0;
+
+ const t=setInterval(()=>{
+  enterText.innerText+=msg.charAt(i);
+  typeSound.currentTime=0;
+  typeSound.play();
+  createHeart();
+  i++;
+  if(i===msg.length) clearInterval(t);
+ },60);
+}
+
+/* ✅ LOGIN */
+window.login=()=>{
+ signInWithEmailAndPassword(auth,email.value,password.value)
+ .then(res=>{
+  showEntering(res.user.uid);
+  setTimeout(()=>location.href="home.html",2000);
  })
- .catch(err => {
-   msg.innerText = err.message;
- });
+ .catch(e=>msg.innerText=e.message);
 };
 
-// ✅ SIGNUP
-window.signup = () => {
- createUserWithEmailAndPassword(auth, email.value, password.value)
- .then(() => {
-   window.location.href = "home.html"; // ✅ FIXED
+/* ✅ SIGNUP */
+window.signup=()=>{
+ createUserWithEmailAndPassword(auth,email.value,password.value)
+ .then(async cred=>{
+  await setDoc(doc(db,"users",cred.user.uid),{
+   username: email.value.split("@")[0],
+   email: email.value
+  });
+  showEntering(cred.user.uid);
+  setTimeout(()=>location.href="home.html",2000);
  })
- .catch(err => {
-   msg.innerText = err.message;
- });
+ .catch(e=>msg.innerText=e.message);
 };
 
-// ✅ FORGOT PASSWORD
-window.forgotPassword = () => {
+/* 🔁 FORGOT PASSWORD */
+window.forgotPassword=()=>{
  if(!email.value){
-  msg.innerText = "Please enter your email first";
+  msg.innerText="Please enter your email first";
   return;
  }
- sendPasswordResetEmail(auth, email.value)
- .then(() => {
-  msg.innerText = "Password reset email sent ✔️";
- })
- .catch(err => {
-  msg.innerText = err.message;
- });
+ sendPasswordResetEmail(auth,email.value)
+ .then(()=>msg.innerText="Password reset email sent ✔️")
+ .catch(e=>msg.innerText=e.message);
 };
-
-// ✅ ALREADY LOGGED IN USER
-onAuthStateChanged(auth, user => {
- if(user){
-  window.location.href = "home.html"; // ✅ FIXED
- }
-});
 </script>
 
 </body>
