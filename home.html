@@ -1,292 +1,628 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+
+<title>SEEZU</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SEEZU | Home</title>
+
+
+
+<!-- STYLE FONT -->
 
 <link href="https://fonts.googleapis.com/css2?family=Sigmar+One&display=swap" rel="stylesheet">
 
+
+
 <style>
-:root{
- --pink:#ff5c8d;
-}
 
-/* LIGHT */
-body{
- margin:0;
- font-family:Arial, sans-serif;
- background:linear-gradient(135deg,#fce4ec,#e3f2fd);
- transition:.4s;
-}
+    :root {
 
-/* DARK */
-body.dark{
- background:#0f0f0f;
- color:#fff;
-}
+        --pink: #ff5c8d
 
-.app{
- max-width:420px;
- margin:auto;
- padding:14px;
-}
+    }
 
-/* HEADER */
-.header{
- text-align:center;
- position:relative;
-}
-.logo{
- font-family:'Sigmar One', cursive;
- font-size:44px;
- color:var(--pink);
-}
 
-/* 🕷️ SPIDER */
-#spiderBtn{
- position:absolute;
- top:12px;
- right:12px;
- font-size:22px;
- cursor:pointer;
-}
 
-/* PROFILE */
-.profile{
- text-align:center;
- margin:15px 0;
-}
-.profile img{
- width:150px;
- border-radius:25px;
- box-shadow:0 10px 25px rgba(0,0,0,.3);
-}
+    body {
 
-/* SOCIAL */
-.social{
- display:flex;
- gap:8px;
- margin:15px 0;
-}
-.social a{
- flex:1;
- padding:10px;
- text-align:center;
- background:var(--pink);
- color:#fff;
- border-radius:25px;
- text-decoration:none;
-}
+        margin: 0;
 
-/* MOOD + CHAT */
-.mood-chat{
- display:flex;
- gap:15px;
- margin:20px 0;
-}
-.mc{
- flex:1;
- background:linear-gradient(180deg,#ffd1dc,#ff8fb1);
- border-radius:22px;
- padding:16px;
- box-shadow:0 8px 20px rgba(0,0,0,.2);
- display:flex;
- flex-direction:column;
-}
-body.dark .mc{
- background:linear-gradient(180deg,#333,#111);
-}
+        font-family: Arial, sans-serif;
 
-/* TEXT */
-.small{font-size:14px;font-weight:bold}
-.big{margin-top:auto;font-size:26px;font-weight:bold}
+        background: linear-gradient(135deg, #fce4ec, #e3f2fd);
 
-/* PINK CIRCLE (ORIGINAL – NOT TOUCHED) */
-.circle{
- margin-top:12px;
- padding:10px;
- border-radius:50px;
- background:var(--pink);
- color:#fff;
- text-align:center;
- font-weight:bold;
- cursor:pointer;
-}
+        transition: .4s;
 
-/* LIVE CHAT FONT */
-.fancy{
- font-family:'Sigmar One', cursive;
- font-size:22px;
- margin-bottom:10px;
-}
+    }
 
-/* MOOD */
-.moods{
- font-size:26px;
- text-align:center;
- margin:10px 0;
-}
-.mood-text{
- text-align:center;
- font-weight:bold;
- padding:6px;
- border-radius:14px;
- transition:.3s;
-}
 
-/* BUTTON */
-.btn{
- margin-top:10px;
- padding:12px;
- border:none;
- border-radius:25px;
- background:var(--pink);
- color:#fff;
- cursor:pointer;
- width:100%;
-}
 
-/* CARD */
-.card{
- background:#fff;
- border-radius:22px;
- padding:16px;
- margin:15px 0;
- box-shadow:0 6px 18px rgba(0,0,0,.12);
-}
-body.dark .card{
- background:#1e1e1e;
-}
+    .app {
 
-/* USER */
-.user{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin-top:10px;
-}
-.user img{
- width:42px;
- height:42px;
- border-radius:50%;
-}
-.follow{
- background:#ffd6e5;
- border:none;
- border-radius:20px;
- padding:6px 14px;
- color:#d6336c;
- cursor:pointer;
-}
+        max-width: 420px;
+
+        margin: auto;
+
+        padding: 16px;
+
+        text-align: center;
+
+    }
+
+
+
+    /* HEADER */
+
+    .header {
+
+        position: relative
+
+    }
+
+
+
+    .logo {
+
+        font-family: 'Sigmar One', cursive;
+
+        font-size: 42px;
+
+        color: var(--pink);
+
+    }
+
+
+
+    #spider {
+
+        position: absolute;
+
+        right: 10px;
+
+        top: 5px;
+
+        cursor: pointer;
+
+    }
+
+
+
+    /* PROFILE PHOTO */
+
+    .profile img {
+
+        width: 150px;
+
+        border-radius: 25px;
+
+        box-shadow: 0 10px 25px rgba(0, 0, 0, .3);
+
+        margin: 12px 0;
+
+    }
+
+
+
+    /* SOCIAL */
+
+    .social {
+
+        display: flex;
+
+        gap: 8px;
+
+        margin: 12px 0
+
+    }
+
+
+
+    .social a {
+
+        flex: 1;
+
+        padding: 10px;
+
+        background: var(--pink);
+
+        color: #fff;
+
+        border-radius: 25px;
+
+        text-decoration: none;
+
+        font-size: 14px;
+
+    }
+
+
+
+    /* CARDS */
+
+    .row {
+
+        display: flex;
+
+        gap: 14px;
+
+        margin: 18px 0
+
+    }
+
+
+
+    .card {
+
+        flex: 1;
+
+        background: linear-gradient(180deg, #ffd1dc, #ff8fb1);
+
+        border-radius: 22px;
+
+        padding: 14px;
+
+    }
+
+
+
+    /* BUTTON */
+
+    .btn {
+
+        width: 100%;
+
+        padding: 10px;
+
+        border: none;
+
+        border-radius: 25px;
+
+        background: var(--pink);
+
+        color: #fff;
+
+        font-weight: bold;
+
+        margin: 6px 0;
+
+    }
+
+
+
+    /* MODE + PLAY */
+
+    .top-row {
+
+        display: flex;
+
+        gap: 8px
+
+    }
+
+
+
+    .top-row button {
+
+        flex: 1
+
+    }
+
+
+
+    /* EMOJI SLIDER */
+
+    .emoji-wrap {
+
+        overflow: hidden
+
+    }
+
+
+
+    .emojis {
+
+        display: flex;
+
+        transition: .3s;
+
+        touch-action: pan-x;
+
+    }
+
+
+
+    .emojis span {
+
+        min-width: 25%;
+
+        font-size: 26px;
+
+        cursor: pointer;
+
+    }
+
+
+
+    /* TEXT */
+
+    .mood-text {
+
+        background: #fff;
+
+        padding: 8px;
+
+        border-radius: 16px;
+
+        font-weight: bold;
+
+        margin-top: 8px;
+
+    }
+
+
+
+    /* MUSIC / CONNECT */
+
+    .music {
+
+        background: #fff;
+
+        border-radius: 22px;
+
+        padding: 16px;
+
+        margin: 18px 0;
+
+        text-align: left;
+
+    }
+
+
+
+    .music button {
+
+        width: 100%;
+
+        margin-top: 10px
+
+    }
+
+
+
+    .user {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        margin-top: 10px;
+
+    }
+
+
+
+    .follow {
+
+        background: #ffd6e5;
+
+        border: none;
+
+        border-radius: 20px;
+
+        padding: 6px 14px;
+
+    }
+
 </style>
-</head>
 
-<body>
+</head><body><div class="app">
 
-<div class="app">
 
-<!-- HEADER -->
-<div class="header">
- <div class="logo">SEEZU</div>
- <span id="spiderBtn" onclick="openSpider()">🕷️</span>
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="logo">SEEZU</div>
+
+        <div id="spider" onclick="openSpider()">🕷️</div>
+
+    </div>
+
+
+
+    <!-- PROFILE PHOTO -->
+
+    <div class="profile">
+
+        <img src="tea-the-khajiit-cute.gif">
+
+    </div>
+
+
+
+    <!-- SOCIAL -->
+
+    <div class="social">
+
+        <a href="https://instagram.com/fx_mausam.xo">Instagram</a>
+
+        <a href="https://snapchat.com/add/">Snapchat</a>
+
+        <a href="https://whatsapp.com/channel/0029VagmI9uGOj9opAOFxb05">WhatsApp</a>
+
+    </div>
+
+    <div class="social">
+
+        <a href="https://t.me/seezspece">Telegram</a>
+
+        <a href="https://youtube.com">YouTube</a>
+
+        <a href="love">Surpris</a>
+
+    </div>
+
+
+
+    <!-- MOOD + CHAT -->
+
+    <div class="row">
+
+
+
+        <!-- MOOD -->
+
+        <div class="card">
+
+
+
+            <div class="top-row">
+
+                <button class="btn" onclick="toggleMode()">mode</button>
+
+                <button class="btn" id="playBtn" onclick="togglePlay()">▶️</button>
+
+            </div>
+
+
+
+            <button class="btn" onclick="changeMood()">Change Mood</button>
+
+
+
+            <div class="emoji-wrap">
+
+                <div class="emojis" id="emojiRow">
+
+                    <span onclick="setMood(0)">😊</span>
+
+                    <span onclick="setMood(1)">😄</span>
+
+                    <span onclick="setMood(2)">😍</span>
+
+                    <span onclick="setMood(3)">😎</span>
+
+                    <span onclick="setMood(4)">🥰</span>
+
+                    <span onclick="setMood(5)">😴</span>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="mood-text" id="moodText">Feeling Happy 😊</div>
+
+        </div>
+
+
+
+        <!-- CHAT -->
+
+        <div class="card">
+
+            <h3>live chat😝</h3>
+
+            <button class="btn" onclick="goPrivate()">private</button>
+
+            <button class="btn" onclick="goPublic()">public</button>
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <!-- MUSIC -->
+
+    <div class="music">
+
+        <h3>Music</h3>
+
+        🎧 Chill Lofi Beats
+
+        <button class="btn" onclick="location.href='musitml'">Open Music Player</button>
+
+    </div>
+
+
+
+
+
+    <!-- CONNECT -->
+
+    <div class="music">
+
+        <h3>Connect & Discover</h3>
+
+        <div class="user">
+
+            <div>Seezuuuu</div>
+
+            <button class="follow">+ Follow</button>
+
+        </div>
+
+        <div class="user">
+
+            <div>Kaito_beats</div>
+
+            <button class="follow">+ Follow</button>
+
+        </div>
+
+    </div>
+
+
+
 </div>
 
-<!-- PROFILE -->
-<div class="profile">
- <img src="tea-the-khajiit-cute.gif">
-</div>
 
-<!-- SOCIAL ROW 1 -->
-<div class="social">
-  <a href="https://instagram.com/fx_mausam.xo" target="_blank">Instagram</a>
-  <a href="https://snapchat.com/add/" target="_blank">Snapchat</a>
-  <a href="https://wa.me/91XXXXXXXXXX" target="_blank">WhatsApp</a>
-</div>
 
-<!-- SOCIAL ROW 2 -->
-<div class="social">
-  <a href="https://facebook.com" target="_blank">Facebook</a>
-  <a href="https://youtube.com" target="_blank">YouTube</a>
-  <a href="#" class="premium">Premium</a>
-</div>
+<audio id="audio"></audio>
 
-<!-- MOOD + CHAT -->
-<div class="mood-chat">
 
- <!-- MOOD -->
- <div class="mc">
-  <div class="small circle" onclick="toggleMode()">mode</div>
-  <div class="big"></div>
-
-  <button class="btn" onclick="changeMood()">Change Mood</button>
-  <div class="moods">😊 😄 😍 😎</div>
-  <div class="mood-text" id="moodText">Feeling Happy 😊</div>
- </div>
-
- <!-- CHAT -->
- <div class="mc">
-  <div class="fancy">live chat😝</div>
-  <div class="circle" onclick="location.href='private.html'">private</div>
-  <div class="circle" onclick="location.href='public.html'">public</div>
- </div>
-
-</div>
-
-<!-- MUSIC -->
-<div class="card">
- <h3>Music</h3>
- 🎧 Chill Lofi Beats
- <button class="btn" onclick="location.href='music.html'">Open Music Player</button>
-</div>
-
-<!-- CONNECT -->
-<div class="card">
- <h3>Connect & Discover</h3>
-
- <div class="user">
-  <div><img src="https://i.pravatar.cc/40?1"> Sakura_chan</div>
-  <button class="follow">+ Follow</button>
- </div>
-
- <div class="user">
-  <div><img src="https://i.pravatar.cc/40?2"> Kaito_beats</div>
-  <button class="follow">+ Follow</button>
- </div>
-</div>
-
-</div>
 
 <script>
-/* 🕷️ SPIDER */
-function openSpider(){
- window.open("spider.html","spider","width=220,height=260,top=60,left=250");
-}
 
-/* DARK MODE */
-let dark=false;
-function toggleMode(){
- dark=!dark;
- document.body.classList.toggle("dark");
-}
+    /* NAV */
 
-/* MOOD + COLOR (TEXT ONLY) */
-const moods=[
- {text:"Feeling Happy 😊", color:"#ffe4ec"},
- {text:"Feeling Excited 😄", color:"#fff3cd"},
- {text:"Feeling Loved 😍", color:"#ffd6e5"},
- {text:"Feeling Cool 😎", color:"#dbeafe"},
- {text:"Feeling Cute 🥰", color:"#e9d5ff"}
-];
+    function openSpider() { window.open("spider.html", "_self") }
 
-function changeMood(){
- const m=moods[Math.floor(Math.random()*moods.length)];
- const t=document.getElementById("moodText");
- t.innerText=m.text;
- t.style.background=m.color;
-}
+    function goPrivate() { window.location = "private.html" }
+
+    function goPublic() { window.location = "public.html" }
+
+
+
+    /* MODE */
+
+    let dark = false;
+
+    function toggleMode() {
+
+        dark = !dark;
+
+        document.body.style.background = dark ? "#111" : "linear-gradient(135deg,#fce4ec,#e3f2fd)";
+
+    }
+
+
+
+    /* MOODS */
+
+    const moods = [
+
+        { t: "Feeling Happy 😊", bg: "#fce4ec", s: "music/happy.mp3" },
+
+        { t: "Feeling Excited 😄", bg: "#fff3cd", s: "music/excited.mp3" },
+
+        { t: "Feeling Loved 😍", bg: "#ffd6e5", s: "music/love.mp3" },
+
+        { t: "Feeling Cool 😎", bg: "#dbeafe", s: "music/cool.mp3" },
+
+        { t: "Feeling Cute 🥰", s: "music/cute.mp3" },
+
+        { t: "Feeling Sleepy 😴", s: "music/sleep.mp3" }
+
+    ];
+
+
+
+    const audio = document.getElementById("audio");
+
+    const text = document.getElementById("moodText");
+
+    const play = document.getElementById("playBtn");
+
+    let playing = false, current = 0;
+
+
+
+    /* SET MOOD */
+
+    function setMood(i) {
+
+        current = i;
+
+        text.innerText = moods[i].t;
+
+        if (moods[i].bg) document.body.style.background = moods[i].bg;
+
+        audio.src = moods[i].s;
+
+        audio.play();
+
+        play.innerText = "⏸️";
+
+        playing = true;
+
+    }
+
+
+
+    /* RANDOM MOOD */
+
+    function changeMood() {
+
+        let i = Math.floor(Math.random() * moods.length);
+
+        setMood(i);
+
+    }
+
+
+
+    /* PLAY / PAUSE (FIXED ✅) */
+
+    function togglePlay() {
+
+        if (!audio.src) return;
+
+        if (playing) {
+
+            audio.pause();
+
+            play.innerText = "▶️";
+
+        } else {
+
+            audio.play();
+
+            play.innerText = "⏸️";
+
+        }
+
+        playing = !playing;
+
+    }
+
+
+
+    /* EMOJI SWIPE */
+
+    let startX = 0, index = 0, row = document.getElementById("emojiRow");
+
+    row.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+
+    row.addEventListener("touchend", e => {
+
+        let endX = e.changedTouches[0].clientX;
+
+        if (startX - endX > 40 && index < row.children.length - 4) index++;
+
+        if (endX - startX > 40 && index > 0) index--;
+
+        row.style.transform = `translateX(-${index * 25}%)`;
+
+    });
+
 </script>
 
-</body>
-</html>
+</body></html>
