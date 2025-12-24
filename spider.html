@@ -1,1 +1,192 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SEEZU | Spider</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+ margin:0;
+ font-family:Arial, sans-serif;
+ background:#fde7f0;
+}
+.card{
+ max-width:340px;
+ margin:40px auto;
+ background:#fff0f6;
+ padding:20px;
+ border-radius:26px;
+ text-align:center;
+ box-shadow:0 15px 30px rgba(0,0,0,.2);
+}
+
+/* 👤 PROFILE PHOTO */
+.profile-pic{
+ width:110px;
+ height:110px;
+ border-radius:50%;
+ object-fit:cover;
+ box-shadow:0 8px 18px rgba(0,0,0,.25);
+ cursor:pointer;
+}
+.upload-text{
+ font-size:12px;
+ color:#ff5c8d;
+ margin-top:6px;
+}
+
+/* 👤 USERNAME */
+h3{
+ color:#ff5c8d;
+ margin:10px 0;
+}
+small{font-size:12px;color:#777}
+
+/* 🔘 BUTTONS */
+.btn{
+ width:100%;
+ padding:12px;
+ border:none;
+ border-radius:22px;
+ background:#ff5c8d;
+ color:white;
+ margin-top:10px;
+ cursor:pointer;
+}
+.logout{
+ background:#ff1744;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+ <!-- 👤 PROFILE PHOTO -->
+ <img src="https://i.imgur.com/8Km9tLL.png"
+      id="profileImg"
+      class="profile-pic"
+      title="Click to change photo">
+
+ <div class="upload-text">Tap photo to change</div>
+ <input type="file" id="photoInput" accept="image/*" hidden>
+
+ <!-- 👤 USERNAME -->
+ <h3 id="username" contenteditable="true">@loading...</h3>
+ <small>Edit name & tap outside to save</small>
+
+ <!-- 🚪 LOGOUT -->
+ <button class="btn logout" id="logoutBtn">Logout</button>
+
+</div>
+
+<!-- 🔥 FIREBASE -->
+<script type="module">
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+
+import {
+ getAuth,
+ onAuthStateChanged,
+ signOut
+} from
+"https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+import {
+ getFirestore,
+ doc,
+ getDoc,
+ updateDoc
+} from
+"https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+import {
+ getStorage,
+ ref,
+ uploadBytes,
+ getDownloadURL
+} from
+"https://www.gstatic.com/firebasejs/12.7.0/firebase-storage.js";
+
+/* 🔥 TUMHARA FIREBASE */
+const firebaseConfig = {
+ apiKey: "AIzaSyBkHcQJJ4HXU4R23J2nBy1z4ElL3_Hr1D0",
+ authDomain: "seezu-1066d.firebaseapp.com",
+ projectId: "seezu-1066d",
+ storageBucket: "seezu-1066d.appspot.com"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+/* ELEMENTS */
+const nameBox = document.getElementById("username");
+const img = document.getElementById("profileImg");
+const input = document.getElementById("photoInput");
+
+/* 🔐 LOAD USER PROFILE */
+onAuthStateChanged(auth, async (user)=>{
+ if(!user){
+  location.href="login.html";
+  return;
+ }
+
+ const refDoc = doc(db,"users",user.uid);
+ const snap = await getDoc(refDoc);
+
+ if(snap.exists()){
+  const data = snap.data();
+  nameBox.innerText = "@"+data.username;
+  if(data.photoURL){
+   img.src = data.photoURL;
+  }
+ }
+});
+
+/* ✏️ SAVE USERNAME */
+nameBox.addEventListener("blur", async ()=>{
+ const user = auth.currentUser;
+ if(!user) return;
+
+ const newName = nameBox.innerText.replace("@","").trim();
+ if(!newName) return;
+
+ await updateDoc(doc(db,"users",user.uid),{
+  username:newName
+ });
+});
+
+/* 📸 PHOTO UPLOAD */
+img.onclick = ()=> input.click();
+
+input.onchange = async ()=>{
+ const file = input.files[0];
+ if(!file) return;
+
+ const user = auth.currentUser;
+ const imgRef = ref(storage, "profilePhotos/"+user.uid);
+
+ await uploadBytes(imgRef, file);
+ const url = await getDownloadURL(imgRef);
+
+ img.src = url;
+
+ await updateDoc(doc(db,"users",user.uid),{
+  photoURL:url
+ });
+};
+
+/* 🚪 LOGOUT */
+logoutBtn.onclick = async ()=>{
+ await signOut(auth);
+ location.href="login.html";
+};
+</script>
+
+</body>
+</html>
