@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SEEZU Birthday Surprise</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family:Poppins,sans-serif;
+    background:linear-gradient(135deg,#141e30,#243b55);
+    overflow:hidden;
+    color:#fff;
+}
+
+/* 🌧️ RAIN */
+.rain span{
+    position:absolute;
+    top:-120px;
+    width:2px;
+    height:110px;
+    background:linear-gradient(to bottom,rgba(255,255,255,.6),transparent);
+    animation:rain linear infinite;
+}
+@keyframes rain{to{transform:translateY(130vh)}}
+
+/* CENTER */
+.center{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+/* CONTAINER */
+.container{
+    width:100%;
+    max-width:430px;
+    height:620px;
+    position:relative;
+}
+
+/* CARD */
+.card{
+    position:absolute;
+    inset:0;
+    padding:50px 26px 26px; /* 🔥 TOP SPACE FOR BACK BTN */
+    border-radius:26px;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(14px);
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+    opacity:0;
+    transform:scale(.94);
+    transition:.45s ease;
+    pointer-events:none;
+}
+.card.active{
+    opacity:1;
+    transform:scale(1);
+    pointer-events:auto;
+}
+
+/* 🔙 BACK BUTTON (FIXED & ALWAYS VISIBLE) */
+.backBtn{
+    position:absolute;
+    top:12px;
+    left:12px;
+    z-index:999;               /* 🔥 MOST IMPORTANT */
+    background:rgba(0,0,0,.6);
+    color:#fff;
+    border:none;
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+    cursor:pointer;
+}
+
+/* TEXT */
+h2,h3{text-align:center;color:#ffb6c1}
+p{font-size:14px;line-height:1.7}
+
+/* BUTTONS */
+.btns{
+    display:flex;
+    gap:10px;
+    margin-top:18px;
+}
+button{
+    padding:12px;
+    border:none;
+    border-radius:18px;
+    font-weight:600;
+    cursor:pointer;
+}
+.buy{background:#ff4f81;color:#fff;width:100%}
+.gray{background:#555;color:#fff;width:100%}
+
+/* QR */
+.qr{
+    width:170px;
+    display:block;
+    margin:12px auto;
+    border-radius:14px;
+}
+
+/* INPUTS */
+input,textarea{
+    width:100%;
+    margin-top:10px;
+    padding:10px;
+    border-radius:12px;
+    border:none;
+    outline:none;
+}
+
+/* TIMER */
+.timer{
+    text-align:center;
+    margin:10px 0;
+    font-weight:600;
+    color:#ffd6e0;
+}
+</style>
+</head>
+<body>
+
+<div class="rain"></div>
+
+<div class="center">
+<div class="container">
+
+<!-- INTRO -->
+<div class="card active" id="intro">
+<h2>🎁 A Special Surprise</h2>
+<div id="typing"></div>
+
+<div class="btns" id="introBtns" style="display:none">
+<button class="buy" onclick="show('method')">Buy Surprise</button>
+<button class="gray" onclick="show('demo')">Demo</button>
+</div>
+</div>
+
+<!-- METHOD -->
+<div class="card" id="method">
+<button class="backBtn" onclick="show('intro')">← Back</button>
+<h3>Choose Payment Method</h3>
+<p>Payment confirm hote hi 2 ghante ke andar private link milega 🔐⏳</p>
+
+<div class="btns">
+<button class="buy" onclick="openQR('gpay')">GPay</button>
+<button class="buy" onclick="openQR('phonepe')">PhonePe</button>
+</div>
+</div>
+
+<!-- QR -->
+<div class="card" id="qrCard">
+<button class="backBtn" onclick="show('method')">← Back</button>
+<h3 id="qrTitle">Scan & Pay</h3>
+<img id="qrImg" class="qr">
+
+<p style="text-align:center">QR scan karke payment karein</p>
+<div class="timer" id="timer">05:00</div>
+
+<button class="buy" id="nextBtn" style="display:none" onclick="show('details')">Next</button>
+</div>
+
+<!-- DETAILS -->
+<div class="card" id="details">
+<button class="backBtn" onclick="show('qrCard')">← Back</button>
+<h3>Payment Screenshot & Details</h3>
+
+<input type="file">
+<input type="text" id="name" placeholder="Birthday Boy / Girl Name">
+<textarea placeholder="Special message (optional)"></textarea>
+
+<button class="buy" onclick="sendWhatsApp()">Send on WhatsApp</button>
+</div>
+
+<!-- FINAL -->
+<div class="card" id="final">
+<h2>🎉 Thank You</h2>
+<p>
+Order receive ho gaya hai 💞<br><br>
+2 ghante ke andar<br>
+private birthday link<br>
+WhatsApp par mil jayega 🔐✨
+</p>
+</div>
+
+<!-- DEMO -->
+<div class="card" id="demo">
+<button class="backBtn" onclick="show('intro')">← Back</button>
+<h3>🎀 Demo Preview</h3>
+<p>Sirf template preview ✨</p>
+
+<button class="buy" onclick="show('method')">Buy Real Surprise</button>
+</div>
+
+</div>
+</div>
+
+<script>
+/* 🌧️ RAIN */
+for(let i=0;i<70;i++){
+ let s=document.createElement("span");
+ s.style.left=Math.random()*100+"%";
+ s.style.animationDuration=2+Math.random()*3+"s";
+ s.style.opacity=Math.random();
+ document.querySelector(".rain").appendChild(s);
+}
+
+/* TYPING */
+const text=[
+"Kabhi-kabhi gift sirf cheez nahi hota…",
+"woh ehsaas hota hai jo zindagi bhar yaad rahe 💞",
+"",
+"Yeh ek exclusive Birthday Surprise Page hai 🌸",
+"Payment confirm hote hi 2 ghante me private link 🔐⏳"
+];
+let i=0,j=0;
+function type(){
+ if(i<text.length){
+  if(j<text[i].length){
+   typing.innerHTML+=text[i][j++];
+   setTimeout(type,40);
+  }else{
+   typing.innerHTML+="<br>";
+   i++;j=0;
+   setTimeout(type,300);
+  }
+ }else{
+  introBtns.style.display="flex";
+ }
+}
+type();
+
+/* NAV */
+function show(id){
+ document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+}
+
+/* QR + TIMER */
+let countdown,seconds;
+function openQR(type){
+ show('qrCard');
+ qrTitle.innerText = type==="gpay" ? "GPay QR" : "PhonePe QR";
+ qrImg.src = type==="gpay" ? "gpay-qr.png" : "phonepe-qr.png";
+
+ seconds=300;
+ nextBtn.style.display="none";
+ clearInterval(countdown);
+
+ setTimeout(()=>nextBtn.style.display="block",20000);
+
+ countdown=setInterval(()=>{
+   let m=Math.floor(seconds/60);
+   let s=seconds%60;
+   timer.innerText=`0${m}:${s<10?'0'+s:s}`;
+   if(seconds<=0) clearInterval(countdown);
+   seconds--;
+ },1000);
+}
+
+/* WHATSAPP */
+function sendWhatsApp(){
+ let name=document.getElementById("name").value||"Not Provided";
+ let msg=`Hello SEEZU 👋%0A
+Payment done 💳%0A
+Name: ${name}%0A
+I am sending screenshot & birthday photo 📸`;
+ window.open(`https://wa.me/917723832790?text=${msg}`,"_blank");
+ show('final');
+}
+</script>
+
+</body>
+</html>
