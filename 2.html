@@ -1,1 +1,209 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surrendering to You | [Name]</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@400;600&display=swap');
+
+        body {
+            margin: 0; padding: 0;
+            background: #000;
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+            font-family: 'Outfit', sans-serif; overflow: hidden;
+            transition: background 1s ease; /* Background change animation */
+        }
+
+        /* Rainbow Typing */
+        .char {
+            display: inline-block; opacity: 0;
+            animation: bouncePop 0.4s forwards, rainbow 3s infinite;
+        }
+        @keyframes bouncePop { to { transform: scale(1); opacity: 1; } }
+        @keyframes rainbow {
+            0% { color: #ff4d94; } 25% { color: #00f2ff; }
+            50% { color: #ffd700; } 100% { color: #ff4d94; }
+        }
+
+        /* Glass Card */
+        #card-container {
+            width: 85%; max-width: 380px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px); border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 25px; text-align: center; position: relative;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+        }
+
+        .photo-frame {
+            width: 100%; height: 230px; border-radius: 25px;
+            overflow: hidden; border: 3px solid #fff; margin-bottom: 20px;
+            transition: transform 0.5s ease;
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        .question-box { font-size: 19px; font-weight: 600; min-height: 90px; margin-bottom: 20px; line-height: 1.5; color: white; }
+
+        /* Single Premium Button */
+        .btn-wrapper { opacity: 0; transition: 0.5s; }
+        .btn-show { opacity: 1; }
+        .btn {
+            background: #fff; border: none;
+            color: #000; padding: 15px 40px; border-radius: 50px;
+            cursor: pointer; font-weight: 700; transition: 0.3s;
+            font-size: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .btn:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(255,255,255,0.6); }
+
+        .back-btn {
+            position: absolute; top: 15px; left: 20px; background: none; border: none;
+            color: rgba(255,255,255,0.5); cursor: pointer; font-size: 12px;
+        }
+
+        /* Final Screen */
+        #final-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 100; display: none;
+            flex-direction: column; align-items: center; justify-content: center; padding: 30px;
+        }
+        .final-msg { font-family: 'Dancing Script'; font-size: 26px; color: #fff; text-align: center; line-height: 1.6; }
+
+        /* Animation Particles */
+        .particle { position: absolute; pointer-events: none; animation: fly 5s linear infinite; }
+        @keyframes fly { to { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop> <source src="cc.mp3" type="audio/mpeg"> </audio>
+    
+    <div id="card-container">
+        <button class="back-btn" onclick="goBack()">◀ BACK</button>
+        <div class="photo-frame" id="photo-frame"><img id="main-img" src="photo1.jpg"></div>
+        <div id="text-area" class="question-box"></div>
+        <div id="btn-area" class="btn-wrapper">
+            <button class="btn" onclick="nextStep()">Continue ❤️</button>
+        </div>
+    </div>
+
+    <div id="final-screen">
+        <div class="photo-frame" style="max-width:320px;"><img src="photo20.jpg"></div>
+        <div id="final-text" class="final-msg"></div>
+        <button class="btn" style="margin-top:30px;" onclick="location.reload()">Har Janam Tumhara ♾️</button>
+    </div>
+
+    <script>
+        const colors = [
+            "#1a1a2e", "#16213e", "#0f3460", "#4e1a3d", "#1a4e32", 
+            "#4e321a", "#2c3e50", "#1e272e", "#4834d4", "#686de0",
+            "#30336b", "#130f40", "#22a6b3", "#be2edd", "#eb4d4b"
+        ];
+
+        const storySteps = [
+            "Oye suno! Kabhi kisi ne bataya hai ki tumhaari hansi poori duniya badal sakti hai? ❤️",
+            "Tumhaari smile mere liye sukoon ka dusra naam hai. Jab tum muskuraati ho, waqt tham jata hai. 🥰",
+            "Mera dil toh kabse tumhaare signal se connect ho chuka hai, ab bas tumhara sath chahiye. 📶",
+            "Tumhaari aankhon ki chamak hi kafi hai mujhe behosh karne ke liye. 😵‍💫",
+            "Main toh kabka kho gaya hoon tum mein, ab rasta dhoondne ka mann bhi nahi karta. 🗺️",
+            "Agar main tumhaara rasta hoon, toh wada hai kabhi bhatakne nahi dunga. ✨",
+            "Tum heroine bhi ho aur meri poori kahani bhi. Har page par sirf tumhaara naam hai. 👸",
+            "Tum nasha nahi, sukoon ho. Wo sukoon jo din bhar ki thakaan ke baad milta hai. 🥂",
+            "Tum hi mera ghar ho. Aur is ghar mein rehne ke liye kisi kiraye ki zaroorat nahi. 🏠",
+            "Permanent entry toh kabki ho gayi hai, ab toh bas tumhaare dil par raaj karna hai. 👑",
+            "Maalik nahi, tumhaara humsafar ban kar rehna hai, har khushi aur har gham mein. 🤝",
+            "Mohabbat ek chota lafz hai, jo humaare beech hai wo toh rooh ka connection hai. ♾️",
+            "Pagal hoon main, tabhi toh tumhaara hoon. Normal log toh itna pyaar handle nahi kar paate. 😂",
+            "Tumne meri boring zindagi ko kitni rangeen film bana diya hai. 🎥",
+            "Wada raha! Jab tak saans hai, tab tak tumhaara haath mere haath mein rahega. 🤝",
+            "Love you more than words can ever describe. ❤️",
+            "Tum meri sabse haseen pasand ho aur hamesha rahogi. 🫦",
+            "Ab aankhen band karo aur mere dil ki dhadkan mehsoos karo... 🔒",
+            "Kya sunayi de raha hai? Sirf tumhaara naam... ❤️"
+        ];
+
+        let currentStep = 0;
+        let history = [];
+
+        function typeRainbow(text, areaId, cb) {
+            const area = document.getElementById(areaId);
+            const btnWrapper = document.getElementById('btn-area');
+            area.innerHTML = "";
+            btnWrapper.classList.remove('btn-show');
+
+            text.split("").forEach((char, i) => {
+                const span = document.createElement('span');
+                span.innerText = char === " " ? "\u00A0" : char;
+                span.className = "char";
+                span.style.animationDelay = (i * 0.04) + "s";
+                area.appendChild(span);
+            });
+
+            setTimeout(() => {
+                btnWrapper.classList.add('btn-show');
+                if(cb) cb();
+            }, text.length * 40 + 500);
+        }
+
+        function nextStep() {
+            if (currentStep < storySteps.length - 1) {
+                history.push(currentStep);
+                currentStep++;
+                updateUI();
+            } else {
+                showFinal();
+            }
+        }
+
+        function goBack() {
+            if (history.length > 0) {
+                currentStep = history.pop();
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            // Change Background Color
+            document.body.style.background = colors[currentStep % colors.length];
+            
+            // Change Image
+            document.getElementById('main-img').src = `photo${currentStep + 1}.jpg`;
+            
+            // Animation for photo frame
+            const frame = document.getElementById('photo-frame');
+            frame.style.transform = `scale(0.9) rotate(${Math.random() * 10 - 5}deg)`;
+            setTimeout(() => frame.style.transform = `scale(1) rotate(0deg)`, 300);
+
+            // Type Text
+            typeRainbow(storySteps[currentStep], 'text-area');
+            
+            // Play Music (User interaction required first)
+            document.getElementById('bg-music').play().catch(() => {});
+        }
+
+        function showFinal() {
+            document.getElementById('card-container').style.display = "none";
+            document.getElementById('final-screen').style.display = "flex";
+            const msg = "Thank you so much mere life mein aane ke liye... Tumhaare aane ke baad hi mujhe samajh aaya ki zindagi kitni haseen hoti hai. Main aaj khud ko poori tarah tumhe samarpit karta hoon. Mera har pal, meri har khushi, aur mera har khwaab ab tumse shuru hokar tum par hi khatam hota hai. Tum sirf meri pasand nahi, tum meri jeene ki wajah ho. Aaj se aur hamesha ke liye... main sirf tumhaara hoon. I Love You Forever! ❤️✨";
+            typeRainbow(msg, 'final-text');
+        }
+
+        // Particle Animation (Hearts/Stars)
+        setInterval(() => {
+            const p = document.createElement('div');
+            p.innerHTML = ["❤️", "✨", "🌸", "💖"][Math.floor(Math.random() * 4)];
+            p.className = "particle";
+            p.style.left = Math.random() * 100 + "vw";
+            p.style.top = "110vh";
+            p.style.fontSize = Math.random() * 20 + 10 + "px";
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 5000);
+        }, 500);
+
+        window.onclick = () => document.getElementById('bg-music').play();
+        updateUI(); // Initialize
+    </script>
+</body>
+</html>
