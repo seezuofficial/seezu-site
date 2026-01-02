@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SEEZU Birthday Surprise</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Poppins,sans-serif;
+background:linear-gradient(135deg,#141e30,#243b55);
+color:#fff;
+overflow:hidden;
+}
+
+/* 🌧️ RAIN */
+.rain span{
+position:absolute;
+top:-120px;
+width:2px;
+height:110px;
+background:linear-gradient(to bottom,rgba(255,255,255,.6),transparent);
+animation:rain linear infinite;
+}
+@keyframes rain{to{transform:translateY(130vh)}}
+
+/* CENTER */
+.center{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+/* CONTAINER */
+.container{
+width:100%;
+max-width:430px;
+height:680px;
+position:relative;
+}
+
+/* CARD */
+.card{
+position:absolute;
+inset:0;
+padding:50px 26px 26px;
+border-radius:26px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(14px);
+box-shadow:0 20px 60px rgba(0,0,0,.5);
+opacity:0;
+transform:scale(.94);
+transition:.45s ease;
+pointer-events:none;
+}
+.card.active{
+opacity:1;
+transform:scale(1);
+pointer-events:auto;
+}
+
+/* BACK */
+.backBtn{
+position:absolute;
+top:12px;
+left:12px;
+z-index:99;
+background:rgba(0,0,0,.6);
+color:#fff;
+border:none;
+padding:6px 14px;
+border-radius:20px;
+font-size:13px;
+cursor:pointer;
+}
+
+/* TEXT */
+h2,h3{text-align:center;color:#ffb6c1}
+p{font-size:14px;line-height:1.7;text-align:center}
+
+/* BUTTONS */
+.btns{display:flex;gap:10px;margin-top:16px}
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:18px;
+font-weight:600;
+cursor:pointer;
+}
+.buy{background:#ff4f81;color:#fff}
+.gray{background:#555;color:#fff}
+
+/* QR */
+.qr{
+width:230px;
+display:block;
+margin:16px auto;
+border-radius:18px;
+background:#fff;
+padding:10px;
+}
+.finalQR{
+width:240px;
+display:block;
+margin:20px auto;
+border-radius:20px;
+background:#fff;
+padding:12px;
+box-shadow:0 10px 30px rgba(0,0,0,.4);
+}
+
+/* INPUT */
+input{
+width:100%;
+margin-top:10px;
+padding:12px;
+border-radius:14px;
+border:none;
+outline:none;
+}
+
+/* TIMER */
+.timer{
+text-align:center;
+margin:10px 0;
+font-weight:600;
+color:#ffd6e0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="rain"></div>
+
+<div class="center">
+<div class="container">
+
+<!-- INTRO / TYPING -->
+<div class="card active" id="intro">
+<h2>🎁 Surprise Card <span id="cardNo"></span></h2>
+<p id="typing"></p>
+
+<div class="btns" id="introBtns" style="display:none">
+<button class="buy" onclick="show('method')">Buy Surprise</button>
+<button class="gray" onclick="openDemo()">Demo</button>
+</div>
+</div>
+
+<!-- PAYMENT METHOD -->
+<div class="card" id="method">
+<button class="backBtn" onclick="show('intro')">← Back</button>
+<h3>Choose Payment Method</h3>
+<p>
+QR scan karke payment karein 💳<br>
+Payment verify hone ke baad<br>
+WhatsApp par unlock password milega 🔐
+</p>
+
+<div class="btns">
+<button class="buy" onclick="showQR('gpay')">GPay</button>
+<button class="buy" onclick="showQR('phonepe')">PhonePe</button>
+</div>
+</div>
+
+<!-- QR + SCREENSHOT -->
+<div class="card" id="qrCard">
+<button class="backBtn" onclick="show('method')">← Back</button>
+<h3 id="qrTitle">Scan & Pay</h3>
+
+<img id="qrImg" class="qr" src="EDIT_20260102_131046.png">
+
+<p>
+<b>Step 1️⃣</b> QR scan karke payment complete karein 💳<br><br>
+<b>Step 2️⃣</b> Payment successful hone ke baad<br>
+<b>screenshot zaroor lein 📸</b><br><br>
+<b>Step 3️⃣</b> Neeche button par click karke<br>
+screenshot WhatsApp par bhejein 📲
+</p>
+
+<div class="timer" id="timer">05:00</div>
+
+<button class="buy" onclick="sendWhatsApp()">Send Screenshot on WhatsApp</button>
+<button class="gray" onclick="show('unlock')">Already Paid? Unlock</button>
+</div>
+
+<!-- UNLOCK -->
+<div class="card" id="unlock">
+<button class="backBtn" onclick="show('qrCard')">← Back</button>
+<h3>🔐 Unlock Card <span id="cardNo2"></span></h3>
+
+<input id="unlockPass" placeholder="Enter Unlock Password">
+<button class="buy" onclick="unlock()">UNLOCK</button>
+
+<p style="font-size:12px;opacity:.85">
+Har card ka password alag hota hai.<br>
+Password WhatsApp par diya jata hai.
+</p>
+</div>
+
+<!-- FINAL -->
+<div class="card" id="final">
+<button class="backBtn" onclick="show('unlock')">← Back</button>
+
+<h2>🎉 Card <span id="cardNo3"></span> Unlocked!</h2>
+
+<p>
+Yeh aapke liye ek khaas birthday gift hai 💖<br>
+Neeche QR scan karke birthday wishes dekhiye 🎂✨
+</p>
+
+<img src="BIRTHDAY_QR.png" class="finalQR">
+</div>
+
+</div>
+</div>
+
+<script>
+/* 🌧️ RAIN */
+for(let i=0;i<70;i++){
+ let s=document.createElement("span");
+ s.style.left=Math.random()*100+"%";
+ s.style.animationDuration=2+Math.random()*3+"s";
+ s.style.opacity=Math.random();
+ document.querySelector(".rain").appendChild(s);
+}
+
+/* CARD NUMBER */
+function getCardNumber(){
+ const m = location.pathname.match(/(\d+)\.html$/);
+ return m ? Number(m[1]) : 6;
+}
+const CARD_NO = getCardNumber();
+cardNo.innerText=CARD_NO;
+cardNo2.innerText=CARD_NO;
+cardNo3.innerText=CARD_NO;
+
+/* TYPING */
+const lines=[
+"Kabhi-kabhi gift sirf ek cheez nahi hota…",
+"Woh ek ehsaas hota hai jo zindagi bhar yaad reh jaata hai 💞",
+"",
+"Yeh ek private Birthday Surprise Card hai 🎁",
+"Jo specially sirf ek hi insaan ke liye banaya gaya hai",
+"",
+"Is card ko unlock karne ke liye payment required hai 🔐",
+"Payment ke baad aapko unlock password diya jayega"
+];
+let li=0,ci=0;
+function type(){
+ if(li<lines.length){
+  if(ci<lines[li].length){
+   typing.innerHTML+=lines[li][ci++];
+   setTimeout(type,40);
+  }else{
+   typing.innerHTML+="<br>";
+   li++;ci=0;
+   setTimeout(type,300);
+  }
+ }else{
+  introBtns.style.display="flex";
+ }
+}
+type();
+
+/* NAV */
+function show(id){
+ document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+}
+
+/* DEMO */
+function openDemo(){
+ window.open(
+ "https://www.instagram.com/reel/DTAC87UEU868R2NMQWISmmJEPuo6ASBB0gEsug0/?igsh=NmpqMW9qczV6OXo2",
+ "_blank"
+ );
+}
+
+/* QR SWITCH */
+function showQR(type){
+ show('qrCard');
+ if(type==="gpay"){
+  qrTitle.innerText="GPay QR";
+  qrImg.src="EDIT_20260102_131046.png";
+ }else{
+  qrTitle.innerText="PhonePe QR";
+  qrImg.src="PHONEPE_QR.png";
+ }
+}
+
+/* TIMER */
+let seconds=300;
+setInterval(()=>{
+ let m=Math.floor(seconds/60);
+ let s=seconds%60;
+ timer.innerText=`0${m}:${s<10?'0'+s:s}`;
+ if(seconds>0)seconds--;
+},1000);
+
+/* PASSWORD (CARD 6 ONLY — as per screenshot) */
+const PASSWORDS = {
+  6: "Seezu@17#S7"
+};
+
+/* UNLOCK */
+function unlock(){
+ if(unlockPass.value === PASSWORDS[CARD_NO]){
+  show('final');
+ }else{
+  alert("Wrong password ❌");
+ }
+}
+
+/* WHATSAPP */
+function sendWhatsApp(){
+ const msg=`Hello SEEZU 👋
+I want to unlock Card ${CARD_NO}
+Payment done 💳
+Screenshot attached 📸`;
+ window.open(
+  `https://wa.me/917723832790?text=${encodeURIComponent(msg)}`,
+  "_blank"
+ );
+}
+</script>
+
+</body>
+</html>
