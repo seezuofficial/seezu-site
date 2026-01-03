@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Silver Edition - Surprise Card</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* SILVER METALLIC THEME */
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family:Poppins,sans-serif;
+    background: radial-gradient(circle at center, #2c3e50 0%, #000000 100%);
+    color:#fff;
+    overflow:hidden;
+    height: 100vh;
+}
+
+.rain span{
+    position:absolute;
+    top:-120px;
+    width:2px;
+    height:90px;
+    background:linear-gradient(to bottom, rgba(200, 200, 200, 0.4), transparent);
+    animation:rain linear infinite;
+}
+@keyframes rain{to{transform:translateY(130vh)}}
+
+.center{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:430px;
+    height:680px;
+    position:relative;
+}
+
+/* 🥈 SILVER GLASS CARD */
+.card{
+    position:absolute;
+    inset:0;
+    padding:75px 26px 26px;
+    border-radius:35px;
+    background: rgba(255, 255, 255, 0.07); 
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+    opacity:0;
+    transform:scale(.95);
+    transition:.5s ease-in-out;
+    pointer-events:none;
+}
+.card.active{
+    opacity:1;
+    transform:scale(1);
+    pointer-events:auto;
+}
+
+/* BACK BUTTON FIX */
+.backBtn{
+    position:absolute;
+    top:25px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index:99;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 7px 20px;
+    border-radius: 20px;
+    font-size: 11px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* TYPING TEXT STYLE */
+#typing {
+    font-size: 15px;
+    line-height: 1.8;
+    text-align: center;
+    color: #e2e8f0;
+    font-weight: 300;
+    text-shadow: 0 0 5px rgba(255,255,255,0.2);
+}
+
+h2 { color: #f1f5f9; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+
+/* BUTTONS */
+.btns{display:flex; flex-direction: column; gap:15px; margin-top:25px}
+button.buy, button.gray{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:18px;
+    font-weight:700;
+    cursor:pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.buy{
+    background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
+    color:#0f172a;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+.gpay{ background: #00c853 !important; color:#fff !important; }
+.phonepe{ background: #673ab7 !important; color:#fff !important; }
+
+.gray{ background: rgba(255,255,255,0.1); color:#fff; }
+
+.qr-container{
+    width:210px;
+    margin:15px auto;
+    background:#fff;
+    padding:12px;
+    border-radius:25px;
+}
+.qr-container img{ width: 100%; display: block; border-radius: 15px; }
+</style>
+</head>
+
+<body>
+
+<div class="rain"></div>
+
+<div class="center">
+<div class="container">
+
+<div class="card active" id="intro">
+    <h2>🥈 Silver Edition</h2>
+    <div id="typing"></div>
+    <div class="btns" id="introBtns" style="display:none">
+        <button class="buy" onclick="show('method')">Unlock Silver Surprise (₹99)</button>
+        <button class="gray" onclick="openDemo()">Watch Demo</button>
+    </div>
+</div>
+
+<div class="card" id="method">
+    <button class="backBtn" onclick="show('intro')">← Back</button>
+    <h3>SECURE CHECKOUT</h3>
+    <p>Premium Silver Surprise Card ko unlock karne ke liye payment karein.</p>
+    <div class="btns">
+        <button class="buy gpay" onclick="showQR('gpay')">Google Pay</button>
+        <button class="buy phonepe" onclick="showQR('phonepe')">PhonePe</button>
+    </div>
+</div>
+
+<div class="card" id="qrCard">
+    <button class="backBtn" onclick="show('method')">← Back</button>
+    <h3 id="qrTitle">Scan & Pay</h3>
+    <div class="qr-container">
+        <img id="qrImg" src="EDIT_20260102_131046.png">
+    </div>
+    <div style="text-align:center; font-weight:bold; color:#60a5fa" id="timer">05:00</div>
+    <button class="buy" onclick="sendWhatsApp()">Send Screenshot</button>
+    <button class="gray" style="margin-top:10px" onclick="show('unlock')">Already Paid? Unlock</button>
+</div>
+
+<div class="card" id="unlock">
+    <button class="backBtn" onclick="show('qrCard')">← Back</button>
+    <h3>🔐 Enter Code</h3>
+    <input id="unlockPass" style="width:100%; padding:15px; border-radius:15px; border:none; text-align:center" placeholder="Enter Silver Password">
+    <button class="buy" onclick="unlock()" style="margin-top:20px">ACTIVATE</button>
+</div>
+
+<div class="card" id="final">
+    <h2>🥈 UNLOCKED</h2>
+    <p>Happy Birthday! Aapka surprise gift yahan hai 💖</p>
+    <div class="qr-container">
+        <img src="BIRTHDAY_QR.png">
+    </div>
+</div>
+
+</div>
+</div>
+
+<script>
+/* SILVER RAIN */
+for(let i=0;i<60;i++){
+    let s=document.createElement("span");
+    s.style.left=Math.random()*100+"%";
+    s.style.animationDuration=2+Math.random()*2+"s";
+    document.querySelector(".rain").appendChild(s);
+}
+
+/* IMPRESSIVE TYPING TEXT */
+const lines=[
+    "Khaas log zindagi mein bar-bar nahi aate...",
+    "Isliye unka birthday bhi ordinary nahi hona chahiye! ✨",
+    "",
+    "Yeh Silver Edition specially un yaadon ke liye hai,",
+    "Jo aap hamesha ke liye preserve karna chahte hain. 🎁",
+    "",
+    "Sirf ₹99 mein ek aisa surprise,",
+    "Jo unke chehre par pyaari si smile le aayega. 😊",
+    "",
+    "Unlock karne ke liye neeche button par click karein. 🔐"
+];
+
+let li=0,ci=0;
+function type(){
+    if(li<lines.length){
+        if(ci<lines[li].length){
+            document.getElementById('typing').innerHTML+=lines[li][ci++];
+            setTimeout(type,35);
+        }else{
+            document.getElementById('typing').innerHTML+="<br>";
+            li++;ci=0;
+            setTimeout(type,500);
+        }
+    }else{
+        document.getElementById('introBtns').style.display="flex";
+    }
+}
+type();
+
+function show(id){
+    document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+function showQR(type){
+    show('qrCard');
+    if(type==="gpay") document.getElementById('qrImg').src="EDIT_20260102_131046.png";
+    else document.getElementById('qrImg').src="PHONEPE_QR.png";
+}
+
+let seconds=300;
+setInterval(()=>{
+    let m=Math.floor(seconds/60), s=seconds%60;
+    document.getElementById('timer').innerText=`0${m}:${s<10?'0'+s:s}`;
+    if(seconds>0)seconds--;
+},1000);
+
+function unlock(){
+    if(document.getElementById('unlockPass').value === "Seezu@77#A7") show('final');
+    else alert("Incorrect Silver Password! ❌");
+}
+
+function sendWhatsApp(){
+    window.open(`https://wa.me/917723832790?text=I paid ₹99 for Silver Card.`, "_blank");
+}
+function openDemo(){ window.open("https://instagram.com", "_blank"); }
+</script>
+
+</body>
+</html>
